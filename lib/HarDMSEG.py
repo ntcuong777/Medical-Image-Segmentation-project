@@ -102,21 +102,24 @@ class aggregation(nn.Module):
 
 class HarDMSEG(nn.Module):
     # res2net based encoder decoder
-    def __init__(self, channel=32, have_attention=False):
+    def __init__(self, channel=32, have_attention=False, arch=85):
         super(HarDMSEG, self).__init__()
         # ---- ResNet Backbone ----
         #self.resnet = res2net50_v1b_26w_4s(pretrained=True)
         self.relu = nn.ReLU(True)
         # ---- Receptive Field Block like module ----
-        
-        self.rfb2_1 = RFB_modified(320, channel)
-        self.rfb3_1 = RFB_modified(640, channel)
-        self.rfb4_1 = RFB_modified(1024, channel)
+        ch1, ch2, ch3 = 320, 720, 1280
+        if arch == 68:
+            ch1, ch2, ch3 = 320, 640, 1024
+
+        self.rfb2_1 = RFB_modified(ch1, channel)
+        self.rfb3_1 = RFB_modified(ch2, channel)
+        self.rfb4_1 = RFB_modified(ch3, channel)
         
         if have_attention:
-            self.rfb2_2 = RFB_modified(320, channel)
-            self.rfb3_2 = RFB_modified(640, channel)
-            self.rfb4_2 = RFB_modified(1024, channel)
+            self.rfb2_2 = RFB_modified(ch1, channel)
+            self.rfb3_2 = RFB_modified(ch2, channel)
+            self.rfb4_2 = RFB_modified(ch3, channel)
         # ---- Partial Decoder ----
         self.agg1 = aggregation(channel)
 
@@ -125,7 +128,8 @@ class HarDMSEG(nn.Module):
         #self.agg1 = aggregation(32)
         
         # ---- Holistic Attention ----
-        self.HA = HA()
+        if have_attention:
+            self.HA = HA()
 
         # ---- reverse attention branch 4 ----
         self.ra4_conv1 = BasicConv2d(1024, 256, kernel_size=1)

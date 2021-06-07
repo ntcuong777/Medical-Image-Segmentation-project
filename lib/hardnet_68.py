@@ -208,7 +208,7 @@ class HarDNet(nn.Module):
             
         for i in range(len(self.base)-1):
             x = self.base[i](x)
-            if i == 4 or i == 9 or (self.arch == 68 and (i == 12 or i == 15)) or (self.arch == 85 and (i == 15 or i == 18)):
+            if i == 4 or i == 9 or (self.arch == 68 and (i == 12 or i == 15)) or (self.arch == 85 and (i == 14 or i == 18)):
                 out_branch.append(x)
 
         out = x
@@ -231,6 +231,6 @@ def hardnet(arch=68,pretrained=True, **kwargs):
         model = HarDNet(arch=85)
         if pretrained:
             print("HAAAHAAA")
-            weights = torch.load('/home/james128333/HarDNet-MSEG/lib/hardnet85.pth')
+            weights = torch.load('/home/cuong/Moded-HarDNet-MSEG/hardnet85.pth')
             model.load_state_dict(weights)
     return model
