@@ -104,6 +104,7 @@ class HarDMSEG(nn.Module):
     # res2net based encoder decoder
     def __init__(self, channel=32, have_attention=False, arch=85):
         super(HarDMSEG, self).__init__()
+        self.have_attention = have_attention
         # ---- ResNet Backbone ----
         #self.resnet = res2net50_v1b_26w_4s(pretrained=True)
         self.relu = nn.ReLU(True)
@@ -117,8 +118,6 @@ class HarDMSEG(nn.Module):
         self.rfb4_1 = RFB_modified(ch3, channel)
         
         if have_attention:
-            self.rfb2_2 = RFB_modified(ch1, channel)
-            self.rfb3_2 = RFB_modified(ch2, channel)
             self.rfb4_2 = RFB_modified(ch3, channel)
         # ---- Partial Decoder ----
         self.agg1 = aggregation(channel)
@@ -170,6 +169,25 @@ class HarDMSEG(nn.Module):
         x4_rfb = self.rfb4_1(x4)        # channel -> 32
         
         ra5_feat = self.agg1(x4_rfb, x3_rfb, x2_rfb)
+
+        # Instead of using another 2 encoder blocks as in original CPD paper,
+        # I choose to not use any encoder block of the baseline HarDNet model.
+        # Basically, the output of the last encoder block of HarDNet is fed
+        # into an attention module (from CPD authors' github). After that, the
+        # output of the attention is fed through an RFB block. Finally, the output
+        # of this RFB block is partially decoded along with x2_rfb and x3_rfb.
+        # This is done to (1) increase accuracy, (2) retains the running time,
+        # and (3) try not to introduce any implementation difficulty.
+        # REFERENCES:
+        # Cascade Partial Decoder (CPD): https://github.com/wuzhe71/CPD/blob/e7373b45d9dd213ea5c9ae71f9de9f03b3cbe6c9/model/CPD_models.py#L95
+        # RFB block: https://github.com/ruinmessi/RFBNet
+        # *WARNING*: The RFB module here might be a little bit different from the original github 1 line above.
+        #           This is due to the HarDNet-MSEG authors.
+        if self.have_attention:
+            x4_2 = self.HA(ra5_feat.sigmoid(), x4)
+            x4_2_rfb = self.rfb4_2(x4_2)
+            ra5_2_feat = self.agg2(x4_2_rfb, x3_rfb, x2_rfb)
+            ra5_feat = torch.mul(ra5_feat, ra5_2_feat) # The so-called "feature fusion operator", I choose torch.mul (may be we can use torch.add or torch.sub)
         
         lateral_map_5 = F.interpolate(ra5_feat, scale_factor=8, mode='bilinear')    # NOTES: Sup-1 (bs, 1, 44, 44) -> (bs, 1, 352, 352)
 
