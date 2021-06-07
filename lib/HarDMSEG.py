@@ -1,7 +1,9 @@
+from lib.HolisticAttention import HA
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from .hardnet_68 import hardnet
+from .HolisticAttention import HA
 
 
 class BasicConv2d(nn.Module):
@@ -100,7 +102,7 @@ class aggregation(nn.Module):
 
 class HarDMSEG(nn.Module):
     # res2net based encoder decoder
-    def __init__(self, channel=32):
+    def __init__(self, channel=32, have_attention=False):
         super(HarDMSEG, self).__init__()
         # ---- ResNet Backbone ----
         #self.resnet = res2net50_v1b_26w_4s(pretrained=True)
@@ -110,9 +112,21 @@ class HarDMSEG(nn.Module):
         self.rfb2_1 = RFB_modified(320, channel)
         self.rfb3_1 = RFB_modified(640, channel)
         self.rfb4_1 = RFB_modified(1024, channel)
+        
+        if have_attention:
+            self.rfb2_2 = RFB_modified(320, channel)
+            self.rfb3_2 = RFB_modified(640, channel)
+            self.rfb4_2 = RFB_modified(1024, channel)
         # ---- Partial Decoder ----
-        #self.agg1 = aggregation(channel)
-        self.agg1 = aggregation(32)
+        self.agg1 = aggregation(channel)
+
+        if have_attention:
+            self.agg2 = aggregation(channel)
+        #self.agg1 = aggregation(32)
+        
+        # ---- Holistic Attention ----
+        self.HA = HA()
+
         # ---- reverse attention branch 4 ----
         self.ra4_conv1 = BasicConv2d(1024, 256, kernel_size=1)
         self.ra4_conv2 = BasicConv2d(256, 256, kernel_size=5, padding=2)
@@ -135,7 +149,7 @@ class HarDMSEG(nn.Module):
         self.conv5 = BasicConv2d(1024, 1024, 3, padding=1)
         self.conv6 = nn.Conv2d(1024, 1, 1)
         self.upsample = nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True)
-        self.hardnet = hardnet(arch=68)
+        self.hardnet = hardnet(arch=85)
         
     def forward(self, x):
         #print("input",x.size())
