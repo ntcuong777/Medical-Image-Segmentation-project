@@ -218,12 +218,15 @@ class HarDNet(nn.Module):
             
         return out_branch
     
-def hardnet(arch=68,pretrained=True, **kwargs):
+def hardnet(arch=68,pretrained=True, depth_wise=False, **kwargs):
     if arch ==68:
         print("68 LOADED")
         model = HarDNet(arch=68)
         if pretrained:
-            weights = torch.load('/home/cuong/Moded-HarDNet-MSEG/hardnet68.pth')
+            if not depth_wise:
+                weights = torch.load('/home/cuong/Moded-HarDNet-MSEG/hardnet68.pth')
+            else:
+                weights = torch.load('/home/cuong/Moded-HarDNet-MSEG/hardnet68s.pth')
             model.load_state_dict(weights)
             print("68 LOADED READY")
     elif arch == 85:
