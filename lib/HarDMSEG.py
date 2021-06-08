@@ -2,7 +2,7 @@ from lib.HolisticAttention import HA
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .hardnet_68 import hardnet
+from .hardnet import hardnet
 from .HolisticAttention import HA
 
 
@@ -153,6 +153,8 @@ class HarDMSEG(nn.Module):
         self.conv6 = nn.Conv2d(1024, 1, 1)
         self.upsample = nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True)
         self.hardnet = hardnet(arch=arch)
+        for param in self.hardnet.parameters():
+            param.requires_grad = False
         
     def forward(self, x):
         #print("input",x.size())

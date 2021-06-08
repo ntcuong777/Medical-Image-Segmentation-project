@@ -1,3 +1,4 @@
+from numpy.core.fromnumeric import mean
 import torch
 from torch.autograd import Variable
 import os
@@ -67,11 +68,12 @@ def test(model, path):
 
 
 
-def train(train_loader, model, optimizer, epoch, test_path):
+def train(train_loader, model, optimizer, epoch, test_path, best_dice):
     model.train()
     # ---- multi-scale training ----
     size_rates = [0.75, 1, 1.25]
-    loss_record2, loss_record3, loss_record4, loss_record5 = AvgMeter(), AvgMeter(), AvgMeter(), AvgMeter()
+    # loss_record2, loss_record3, loss_record4, loss_record5 = AvgMeter(), AvgMeter(), AvgMeter(), AvgMeter()
+    loss_record5 = AvgMeter()
     for i, pack in enumerate(train_loader, start=1):
         for rate in size_rates:
             optimizer.zero_grad()
@@ -82,8 +84,8 @@ def train(train_loader, model, optimizer, epoch, test_path):
             # ---- rescale ----
             trainsize = int(round(opt.trainsize*rate/32)*32)
             if rate != 1:
-                images = F.upsample(images, size=(trainsize, trainsize), mode='bilinear', align_corners=True)
-                gts = F.upsample(gts, size=(trainsize, trainsize), mode='bilinear', align_corners=True)
+                images = F.interpolate(images, size=(trainsize, trainsize), mode='bilinear', align_corners=True)
+                gts = F.interpolate(gts, size=(trainsize, trainsize), mode='bilinear', align_corners=True)
             # ---- forward ----
             #lateral_map_5, lateral_map_4, lateral_map_3, lateral_map_2 = model(images)
             lateral_map_5 = model(images)
@@ -99,7 +101,6 @@ def train(train_loader, model, optimizer, epoch, test_path):
             optimizer.step()
             # ---- recording loss ----
             if rate == 1:
-                
                 loss_record5.update(loss5.data, opt.batchsize)
         # ---- train visualization ----
         if i % 20 == 0 or i == total_step:
@@ -110,34 +111,37 @@ def train(train_loader, model, optimizer, epoch, test_path):
     save_path = 'snapshots/{}/'.format(opt.train_save)
     os.makedirs(save_path, exist_ok=True)
     
-    best = 0
+    best = best_dice
     if (epoch+1) % 1 == 0:
         meandice = test(model,test_path)
+        print('{} Epoch [{:03d}/{:03d}], mDice = {:05f}'.format(datetime.now(), epoch, opt.epoch, meandice))
         if meandice > best:
             best = meandice
-            torch.save(model.state_dict(), save_path + 'HarD-MSEG-best.pth' )
-            print('[Saving Snapshot:]', save_path + 'HarD-MSEG-best.pth',meandice)
+            torch.save(model.state_dict(), save_path + 'Moded-HarD-MSEG-best.pth' )
+            print('[Saving Snapshot:]', save_path + 'Moded-HarD-MSEG-best.pth',meandice)
+    return best # return best meandice for save the best later 
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     
     parser.add_argument('--epoch', type=int,
-                        default=100, help='epoch number')
+                        default=300, help='epoch number')
     
     parser.add_argument('--lr', type=float,
-                        default=1e-4, help='learning rate')
+                        default=1e-2, help='learning rate')
     
     parser.add_argument('--optimizer', type=str,
-                        default='Adam', help='choosing optimizer Adam or SGD')
+                        default='SGD', help='choosing optimizer Adam or SGD')
     
     parser.add_argument('--augmentation',
-                        default=False, help='choose to do random flip rotation')
+                        default=True, help='choose to do random flip rotation')
     
     parser.add_argument('--batchsize', type=int,
                         default=16, help='training batch size')
     
     parser.add_argument('--trainsize', type=int,
-                        default=352, help='training dataset size')
+                        default=512, help='training dataset size')
     
     parser.add_argument('--clip', type=float,
                         default=0.5, help='gradient clipping margin')
@@ -155,7 +159,7 @@ if __name__ == '__main__':
                         default='/work/james128333/PraNet/TestDataset/Kvasir' , help='path to testing Kvasir dataset')
     
     parser.add_argument('--train_save', type=str,
-                        default='HarD-MSEG-best')
+                        default='Moded-HarDMSEG-best')
     
     opt = parser.parse_args()
 
@@ -184,6 +188,7 @@ if __name__ == '__main__':
 
     print("#"*20, "Start Training", "#"*20)
 
+    best_dice = 0.0
     for epoch in range(1, opt.epoch):
         adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
-        train(train_loader, model, optimizer, epoch, opt.test_path)
+        best_dice = train(train_loader, model, optimizer, epoch, opt.test_path, best_dice)
