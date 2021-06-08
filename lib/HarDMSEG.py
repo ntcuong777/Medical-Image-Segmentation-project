@@ -190,7 +190,7 @@ class HarDMSEG(nn.Module):
             x4_2 = self.HA(ra5_feat.sigmoid(), x4)
             x4_2_rfb = self.rfb4_2(x4_2)
             ra5_2_feat = self.agg2(x4_2_rfb, x3_rfb, x2_rfb)
-            ra5_feat = torch.mul(ra5_feat, ra5_2_feat) # The so-called "feature fusion operator", I choose torch.mul (may be we can use torch.add or torch.sub)
+            ra5_feat = torch.add(ra5_feat, ra5_2_feat) # The so-called "feature fusion operator", I choose torch.add (may be we can use torch.mul or torch.sub)
         
         lateral_map_5 = F.interpolate(ra5_feat, scale_factor=8, mode='bilinear')    # NOTES: Sup-1 (bs, 1, 44, 44) -> (bs, 1, 352, 352)
 

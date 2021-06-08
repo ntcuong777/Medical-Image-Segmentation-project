@@ -10,6 +10,7 @@ from utils.utils import clip_gradient, adjust_lr, AvgMeter
 import torch.nn.functional as F
 import numpy as np
 from torchstat import stat
+from torchinfo import summary
 
 
 def structure_loss(pred, mask):
@@ -168,7 +169,7 @@ if __name__ == '__main__':
     # ---- build models ----
     # torch.cuda.set_device(0)  # set your gpu device
     model = HarDMSEG()
-    model.load_state_dict(torch.load(opt.pth_path))
+    #model.load_state_dict(torch.load(opt.pth_path))
     model.cuda()
 
     # ---- flops and params ----
@@ -189,6 +190,9 @@ if __name__ == '__main__':
 
     train_loader = get_loader(image_root, gt_root, batchsize=opt.batchsize, trainsize=opt.trainsize, augmentation = opt.augmentation)
     total_step = len(train_loader)
+
+    # Summarize model
+    summary(model, input_size=(32, 3, 512, 512))
 
     print("#"*20, "Start Training", "#"*20)
 
