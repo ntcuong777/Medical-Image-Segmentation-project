@@ -21,7 +21,7 @@ class PolypDataset(data.Dataset):
         self.gts = sorted(self.gts)
         self.filter_files()
         self.size = len(self.images)
-        if self.augmentations == 'True':
+        if self.augmentations == True:
             print('Using RandomRotation, RandomFlip')
             self.img_transform = transforms.Compose([
                 transforms.RandomRotation(90, resample=False, expand=False, center=None, fill=None),

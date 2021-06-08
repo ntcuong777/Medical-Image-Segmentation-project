@@ -134,7 +134,7 @@ if __name__ == '__main__':
     parser.add_argument('--optimizer', type=str,
                         default='SGD', help='choosing optimizer Adam or SGD')
     
-    parser.add_argument('--augmentation',
+    parser.add_argument('--augmentation', type=bool,
                         default=True, help='choose to do random flip rotation')
     
     parser.add_argument('--batchsize', type=int,
