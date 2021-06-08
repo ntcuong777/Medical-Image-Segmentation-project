@@ -43,5 +43,5 @@ for _data_name in ['Kvasir']:
         res = (res - res.min()) / (res.max() - res.min() + 1e-8)
         
         # misc.imsave(save_path+name, res)
-        res = Image.fromarray((res * 255.0).astype(np.uint8), 'RGB')
+        res = Image.fromarray((res * 255.0).astype(np.uint8), 'L')
         res.save(save_path+name)
