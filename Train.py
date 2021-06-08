@@ -160,12 +160,16 @@ if __name__ == '__main__':
     
     parser.add_argument('--train_save', type=str,
                         default='Moded-HarDMSEG-best')
+    parser.add_argument('--pth_path', type=str,
+                        default='snapshots/Moded-HarDMSEG-best/Moded-HarD-MSEG-best.pth')
     
     opt = parser.parse_args()
 
     # ---- build models ----
     # torch.cuda.set_device(0)  # set your gpu device
-    model = HarDMSEG().cuda()
+    model = HarDMSEG()
+    model.load_state_dict(torch.load(opt.pth_path))
+    model.cuda()
 
     # ---- flops and params ----
     # from utils.utils import CalParams
