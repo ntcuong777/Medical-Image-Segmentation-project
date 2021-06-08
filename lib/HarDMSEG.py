@@ -152,7 +152,7 @@ class HarDMSEG(nn.Module):
         self.conv5 = BasicConv2d(1024, 1024, 3, padding=1)
         self.conv6 = nn.Conv2d(1024, 1, 1)
         self.upsample = nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True)
-        self.hardnet = hardnet(arch=85)
+        self.hardnet = hardnet(arch=arch)
         
     def forward(self, x):
         #print("input",x.size())
