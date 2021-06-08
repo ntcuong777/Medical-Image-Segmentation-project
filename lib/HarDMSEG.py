@@ -70,7 +70,7 @@ class aggregation(nn.Module):
         super(aggregation, self).__init__()
         self.relu = nn.ReLU(True)
 
-        self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+        self.upsample = nn.Upsample(scale_factor=2, mode='bilinear')
         self.conv_upsample1 = BasicConv2d(channel, channel, 3, padding=1)
         self.conv_upsample2 = BasicConv2d(channel, channel, 3, padding=1)
         self.conv_upsample3 = BasicConv2d(channel, channel, 3, padding=1)
@@ -151,7 +151,7 @@ class HarDMSEG(nn.Module):
         self.conv4 = BasicConv2d(1024, 32, kernel_size=1)
         self.conv5 = BasicConv2d(1024, 1024, 3, padding=1)
         self.conv6 = nn.Conv2d(1024, 1, 1)
-        self.upsample = nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True)
+        self.upsample = nn.Upsample(scale_factor=4, mode='bilinear')
         self.hardnet = hardnet(arch=arch)
         for param in self.hardnet.parameters():
             param.requires_grad = False

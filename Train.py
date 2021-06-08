@@ -84,8 +84,8 @@ def train(train_loader, model, optimizer, epoch, test_path, best_dice):
             # ---- rescale ----
             trainsize = int(round(opt.trainsize*rate/32)*32)
             if rate != 1:
-                images = F.interpolate(images, size=(trainsize, trainsize), mode='bilinear', align_corners=True)
-                gts = F.interpolate(gts, size=(trainsize, trainsize), mode='bilinear', align_corners=True)
+                images = F.interpolate(images, size=(trainsize, trainsize), mode='bilinear')
+                gts = F.interpolate(gts, size=(trainsize, trainsize), mode='bilinear')
             # ---- forward ----
             #lateral_map_5, lateral_map_4, lateral_map_3, lateral_map_2 = model(images)
             lateral_map_5 = model(images)
