@@ -45,7 +45,7 @@ def test(model, path):
         image = image.cuda()
         
         res  = model(image)
-        res = F.upsample(res, size=gt.shape, mode='bilinear', align_corners=False)
+        res = F.interpolation(res, size=gt.shape, mode='bilinear')
         res = res.sigmoid().data.cpu().numpy().squeeze()
         res = (res - res.min()) / (res.max() - res.min() + 1e-8)
         
