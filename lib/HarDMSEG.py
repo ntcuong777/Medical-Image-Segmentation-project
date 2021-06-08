@@ -102,7 +102,7 @@ class aggregation(nn.Module):
 
 class HarDMSEG(nn.Module):
     # res2net based encoder decoder
-    def __init__(self, channel=32, have_attention=False, arch=85):
+    def __init__(self, channel=32, have_attention=False, arch=85, freeze_base=False):
         super(HarDMSEG, self).__init__()
         self.have_attention = have_attention
         # ---- ResNet Backbone ----
@@ -153,8 +153,9 @@ class HarDMSEG(nn.Module):
         self.conv6 = nn.Conv2d(1024, 1, 1)
         self.upsample = nn.Upsample(scale_factor=4, mode='bilinear')
         self.hardnet = hardnet(arch=arch)
-        for param in self.hardnet.parameters():
-            param.requires_grad = False
+        if freeze_base:
+            for param in self.hardnet.parameters():
+                param.requires_grad = False
         
     def forward(self, x):
         #print("input",x.size())
