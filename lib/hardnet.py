@@ -221,7 +221,7 @@ class HarDNet(nn.Module):
 def hardnet(arch=68,pretrained=True, depth_wise=False, **kwargs):
     if arch ==68:
         print("68 LOADED")
-        model = HarDNet(arch=68)
+        model = HarDNet(arch=68, depth_wise=depth_wise)
         if pretrained:
             if not depth_wise:
                 weights = torch.load('/home/cuong/Moded-HarDNet-MSEG/hardnet68.pth')
