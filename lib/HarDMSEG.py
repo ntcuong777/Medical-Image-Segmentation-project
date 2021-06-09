@@ -118,7 +118,7 @@ class HarDMSEG(nn.Module):
         self.rfb4_1 = RFB_modified(ch3, channel)
         
         if have_attention:
-            self.rfb4_2 = RFB_modified(ch3, channel)
+            self.rfb2_2 = RFB_modified(ch1, channel)
         # ---- Partial Decoder ----
         self.agg1 = aggregation(channel)
 
@@ -187,9 +187,9 @@ class HarDMSEG(nn.Module):
         # *WARNING*: The RFB module here might be a little bit different from the original github 1 line above.
         #           This is due to the HarDNet-MSEG authors.
         if self.have_attention:
-            x4_2 = self.HA(ra5_feat.sigmoid(), x4)
-            x4_2_rfb = self.rfb4_2(x4_2)
-            ra5_2_feat = self.agg2(x4_2_rfb, x3_rfb, x2_rfb)
+            x2_2 = self.HA(ra5_feat.sigmoid(), x2)
+            x2_2_rfb = self.rfb2_2(x2_2)
+            ra5_2_feat = self.agg2(x2_2_rfb, x3_rfb, x2_rfb)
             ra5_feat = torch.add(ra5_feat, ra5_2_feat) # The so-called "feature fusion operator", I choose torch.add (may be we can use torch.mul or torch.sub)
         
         lateral_map_5 = F.interpolate(ra5_feat, scale_factor=8, mode='bilinear')    # NOTES: Sup-1 (bs, 1, 44, 44) -> (bs, 1, 352, 352)

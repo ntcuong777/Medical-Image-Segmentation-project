@@ -11,6 +11,7 @@ import torch.nn.functional as F
 import numpy as np
 from torchstat import stat
 from torchinfo import summary
+import torch.nn as nn
 
 
 def structure_loss(pred, mask):
@@ -166,11 +167,17 @@ if __name__ == '__main__':
     
     opt = parser.parse_args()
 
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
     # ---- build models ----
     # torch.cuda.set_device(0)  # set your gpu device
     model = HarDMSEG()
+    if torch.cuda.device_count() > 1:
+        print("Let's use", torch.cuda.device_count(), "GPUs!")
+        # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+        model = nn.DataParallel(model)
     #model.load_state_dict(torch.load(opt.pth_path))
-    model.cuda()
+    model.to(device)
 
     # ---- flops and params ----
     # from utils.utils import CalParams
