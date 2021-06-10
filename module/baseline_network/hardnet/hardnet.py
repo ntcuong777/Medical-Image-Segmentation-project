@@ -73,12 +73,12 @@ class HarDNet(nn.Module):
         # First Encoder block: Standard Conv3x3, Stride=2
         self.base.append(ConvLayer(in_channels=3, out_channels=first_ch[0], kernel=3,
                             stride=2, activation=activation, bias=False))
-        count_layers += 1
+        count_layers += 1 # one layer added
         self.encoder_block_end_indices.append(count_layers - 1)
   
         # Second Encoder block
         self.base.append(ConvLayer(first_ch[0], first_ch[1], kernel=second_kernel, activation=activation))
-        count_layers += 1
+        count_layers += 1 # one layer added
         self.encoder_block_end_indices.append(count_layers - 1)
 
         # Maxpooling or DWConv3x3 downsampling
@@ -86,6 +86,7 @@ class HarDNet(nn.Module):
             self.base.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
         else:
             self.base.append ( DWConvLayer(first_ch[1], stride=2) )
+        count_layers += 1 # one layer - either maxpool or dwconv is added
 
         # Build all HarDNet blocks
         ch = first_ch[1]
@@ -93,21 +94,25 @@ class HarDNet(nn.Module):
             blk = HarDBlock(ch, gr[i], grmul, n_layers[i], dwconv=depth_wise, activation=activation)
             ch = blk.get_out_ch()
             self.base.append ( blk )
-            count_layers += 1
+            count_layers += 1 # one layer is added - one HarDBlock
             self.har_d_block_indices.append(count_layers - 1)
             
             if i == blks-1 and self.arch == 85:
                 self.base.append ( nn.Dropout(0.1))
-            
+                count_layers += 1 # dropout is added
+
             self.base.append ( ConvLayer(ch, ch_list[i], kernel=1, activation=activation) )
-            count_layers += 1
+            count_layers += 1 # one layer is added
+
             ch = ch_list[i]
             if downSamp[i] == 1:
                 self.encoder_block_end_indices.append(count_layers - 1)
+
                 if max_pool:
                     self.base.append(nn.MaxPool2d(kernel_size=2, stride=2))
                 else:
                     self.base.append ( DWConvLayer(ch, stride=2) )
+                count_layers += 1 # one layer is added - either dwconv or maxpool
             
         
         ch = ch_list[blks-1]
