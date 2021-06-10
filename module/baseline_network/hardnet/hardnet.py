@@ -113,7 +113,23 @@ class HarDNet(nn.Module):
                 else:
                     self.base.append ( DWConvLayer(ch, stride=2) )
                 count_layers += 1 # one layer is added - either dwconv or maxpool
-            
+
+        # This is the end of the baseline, the next layers are classification layers for ImageNet
+        #
+        # After the last [HarDBlock - Conv] block, there is no downsampling layer, but this block
+        # is still considered as an encoder block. Here, I consider an encoder block as a list of
+        # layers that have the same output size (counting even the downsampler). See below for
+        # illustration.
+        #
+        # e.g.: [1st_downsampler (out_size = 256x256) -> some_conv_layer_or_block_2 (out_size = 256x256)]
+        #       -> [2nd_downsampler (out_size = 128x128) -> some_conv_layer_or_block_2 (out_size = 128x128)]
+        # Here, the [] pair denotes an encoder block as considered by me.
+        #
+        # The reason for this is because of the properties of Cascade Partial Decoder module.
+        # That module needs the output of the 3 previous encoder blocks so I have the save the
+        # indices where an encoder block ends so that I can save its output & return it to the
+        # main pipeline which uses Cascade Partial Decoder.
+        self.encoder_block_end_indices.append(count_layers - 1)
         
         ch = ch_list[blks-1]
         self.base.append (
