@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from .custom_layers import *
 from .hard_block import *
+import os
 
 weight_paths = {
     "HarDNet39ds": "weights/hardnet39ds.pth",
@@ -119,7 +120,15 @@ class HarDNet(nn.Module):
         
 
         #### DONE DEFINING NETWORK - STARTS LOADING SAVED WEIGHTS ####
+        WORKDIR = os.getcwd()
+
+        # Changing the workdir is necessary to load the saved HarDNet weights
+        TEMPDIR = os.path.join(os.getcwd(), 'module/baseline_network/hardnet')
+        os.chdir(TEMPDIR)
+
         self.load_state_dict(torch.load(weight_paths[model_name]))
+
+        os.chdir(WORKDIR) # back to working directory
 
 
     def forward(self, x):
