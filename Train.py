@@ -52,7 +52,6 @@ def test(model, path):
         
         input = res
         target = np.array(gt)
-        N = gt.shape
         smooth = 1
         input_flat = np.reshape(input,(-1))
         target_flat = np.reshape(target,(-1))
@@ -161,6 +160,9 @@ if __name__ == '__main__':
     
     parser.add_argument('--train_save', type=str,
                         default='Moded-HarDMSEG-best')
+
+    parser.add_argument('--resume', type=bool, default=False)
+
     parser.add_argument('--pth_path', type=str,
                         default='snapshots/Moded-HarDMSEG-best/Moded-HarDMSEG-best.pth')
     
@@ -175,7 +177,9 @@ if __name__ == '__main__':
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
         model = nn.DataParallel(model)
-    #model.load_state_dict(torch.load(opt.pth_path))
+    
+    if opt.resume:
+        model.load_state_dict(torch.load(opt.pth_path))
     model.to(device)
 
     # ---- flops and params ----
@@ -184,13 +188,7 @@ if __name__ == '__main__':
     # CalParams(lib, x)
 
     params = model.parameters()
-    
-    if opt.optimizer == 'Adam':
-        optimizer = torch.optim.Adam(params, opt.lr)
-    else:
-        optimizer = torch.optim.SGD(params, opt.lr, weight_decay = 1e-4, momentum = 0.9)
-        
-    print(optimizer)
+ 
     image_root = '{}/images/'.format(opt.train_path)
     gt_root = '{}/masks/'.format(opt.train_path)
 
@@ -202,7 +200,18 @@ if __name__ == '__main__':
 
     print("#"*20, "Start Training", "#"*20)
 
+    params = model.parameters()
+    if opt.optimizer == 'Adam':
+        optimizer = torch.optim.Adam(params, opt.lr)
+    else:
+        # optimizer = torch.optim.SGD(params, opt.lr, weight_decay = 1e-4, momentum = 0.9)
+        optimizer = torch.optim.SGD(params, opt.lr, momentum = 0.9)
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader), epoch=opt.epoch)
+        optimizer = scheduler
+
+    print(optimizer)
+
     best_dice = 0.0
     for epoch in range(1, opt.epoch):
-        adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
+        #adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
         best_dice = train(train_loader, model, optimizer, epoch, opt.test_path, best_dice)
