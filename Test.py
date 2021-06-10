@@ -2,16 +2,16 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import os, argparse
-from scipy import misc
-from lib.HarDMSEG import HarDMSEG
+from module.segmenter.HarDMSEG import HarDMSEG
 from utils.dataloader import test_dataset
 from PIL import Image
-import PIL
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--testsize', type=int, default=352, help='testing size')
-parser.add_argument('--pth_path', type=str, default='HarDNet-MSEG-best.pth')
-parser.add_argument('--arch', type=int, default=68)
+parser.add_argument('--pth_path', type=str, default='HarDMSEG-best.pth')
+parser.add_argument('--model', type=str, default='HarDNet68ds')
+parser.add_argument('--use_attention', type=str, default=False)
+parser.add_argument('--activation', type=str, default='relu', help='`relu` or `mish`')
 for _data_name in ['Kvasir']:
 #for _data_name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
     
@@ -21,7 +21,7 @@ for _data_name in ['Kvasir']:
     
     save_path = './results/Moded-HarDMSEG/{}/'.format(_data_name)
     opt = parser.parse_args()
-    model = HarDMSEG(arch=opt.arch)
+    model = HarDMSEG(model_variant=opt.model, activation=opt.activation, use_attention=opt.use_attention)
     model.load_state_dict(torch.load(opt.pth_path))
     model.cuda()
     model.eval()

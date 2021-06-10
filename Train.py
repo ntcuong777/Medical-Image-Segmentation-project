@@ -4,12 +4,11 @@ from torch.autograd import Variable
 import os
 import argparse
 from datetime import datetime
-from lib.HarDMSEG import HarDMSEG
+from module.segmenter.HarDMSEG import HarDMSEG
 from utils.dataloader import get_loader,test_dataset
 from utils.utils import clip_gradient, adjust_lr, AvgMeter
 import torch.nn.functional as F
 import numpy as np
-from torchstat import stat
 from torchinfo import summary
 import torch.nn as nn
 
@@ -163,7 +162,7 @@ if __name__ == '__main__':
     parser.add_argument('--train_save', type=str,
                         default='Moded-HarDMSEG-best')
     parser.add_argument('--pth_path', type=str,
-                        default='snapshots/Moded-HarDMSEG-best/Moded-HarD-MSEG-best.pth')
+                        default='snapshots/Moded-HarDMSEG-best/Moded-HarDMSEG-best.pth')
     
     opt = parser.parse_args()
 
@@ -171,7 +170,7 @@ if __name__ == '__main__':
 
     # ---- build models ----
     # torch.cuda.set_device(0)  # set your gpu device
-    model = HarDMSEG(arch=68, depth_wise=True)
+    model = HarDMSEG(model_variant='HarDNet68ds', use_attention=True, activation='mish')
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
