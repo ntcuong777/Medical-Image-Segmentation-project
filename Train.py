@@ -68,7 +68,7 @@ def test(model, path):
 
 
 
-def train(train_loader, model, optimizer, epoch, test_path, best_dice):
+def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice):
     model.train()
     # ---- multi-scale training ----
     size_rates = [0.75, 1, 1.25]
@@ -99,6 +99,7 @@ def train(train_loader, model, optimizer, epoch, test_path, best_dice):
             loss.backward()
             clip_gradient(optimizer, opt.clip)
             optimizer.step()
+            scheduler.step() # step scheduler
             # ---- recording loss ----
             if rate == 1:
                 loss_record5.update(loss5.data, opt.batchsize)
@@ -213,8 +214,5 @@ if __name__ == '__main__':
 
     best_dice = 0.0
     for epoch in range(1, opt.epoch):
-        #adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
-        best_dice = train(train_loader, model, optimizer, epoch, opt.test_path, best_dice)
-
-        if epoch % 20 == 0:
-            scheduler.step()
+        # adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
+        best_dice = train(train_loader, model, optimizer, scheduler, epoch, opt.test_path, best_dice)
