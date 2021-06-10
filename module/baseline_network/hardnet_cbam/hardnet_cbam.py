@@ -3,8 +3,8 @@ from module.baseline_network.hardnet.hardnet import HarDNet
 from module.baseline_network.hardnet_cbam.CBAM.cbam import CBAM
 
 class HarDNet_CBAM(HarDNet): # Adapter design pattern is great
-    def __init__(self, hardnet_model_name, activation='relu'):
-        super().__init__(model_name=hardnet_model_name, activation=activation)
+    def __init__(self, hardnet_model_variant, activation='relu'):
+        super().__init__(model_variant=hardnet_model_variant, activation=activation)
 
         self.cbam_list = nn.ModuleList()
 
