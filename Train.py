@@ -120,6 +120,8 @@ def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice
             best = meandice
             torch.save(model.state_dict(), save_path + 'Moded-HarD-MSEG-best.pth' )
             print('[Saving Snapshot:]', save_path + 'Moded-HarD-MSEG-best.pth', 'New best:', meandice)
+        else:
+            print('Current best is:', best)
         torch.save(model.state_dict(), save_path + 'Moded-HarD-MSEG-last.pth' )
     return best # return best meandice for save the best later 
 
@@ -211,7 +213,7 @@ if __name__ == '__main__':
 
     print(optimizer)
 
-    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader), epochs=opt.epoch)
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader)*3, epochs=opt.epoch)
 
     best_dice = 0.0
     for epoch in range(1, opt.epoch):
