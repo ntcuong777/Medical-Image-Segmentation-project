@@ -204,8 +204,8 @@ if __name__ == '__main__':
     if opt.optimizer == 'Adam':
         optimizer = torch.optim.Adam(params, opt.lr)
     else:
-        # optimizer = torch.optim.SGD(params, opt.lr, weight_decay = 1e-4, momentum = 0.9)
-        optimizer = torch.optim.SGD(params, opt.lr, momentum = 0.9)
+        optimizer = torch.optim.SGD(params, opt.lr, weight_decay = 1e-4, momentum = 0.9)
+        # optimizer = torch.optim.SGD(params, opt.lr, momentum = 0.9)
 
     print(optimizer)
 
