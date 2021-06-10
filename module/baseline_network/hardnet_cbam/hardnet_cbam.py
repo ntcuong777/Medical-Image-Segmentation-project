@@ -6,7 +6,7 @@ class HarDNet_CBAM(HarDNet): # Adapter design pattern is great
     def __init__(self, hardnet_model_name, activation='relu'):
         super().__init__(model_name=hardnet_model_name, activation=activation)
 
-        self.cbam_list = []
+        self.cbam_list = nn.ModuleList()
 
         for i in self.har_d_block_indices:
             out_channels = self.base[i].get_out_ch()
