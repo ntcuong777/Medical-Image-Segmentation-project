@@ -14,7 +14,7 @@ class PolypDataset(data.Dataset):
     def __init__(self, image_root, gt_root, trainsize, augmentations):
         self.trainsize = trainsize
         self.augmentations = augmentations
-        print(self.augmentations)
+        print('Augmentation is: ', self.augmentations)
         self.images = [image_root + f for f in os.listdir(image_root) if f.endswith('.jpg') or f.endswith('.png')]
         self.gts = [gt_root + f for f in os.listdir(gt_root) if f.endswith('.png')]
         self.images = sorted(self.images)
@@ -27,14 +27,17 @@ class PolypDataset(data.Dataset):
                 transforms.RandomRotation(90, expand=False, center=None, fill=None),
                 transforms.RandomVerticalFlip(p=0.5),
                 transforms.RandomHorizontalFlip(p=0.5),
+                transforms.RandomAffine(0, translate=(0.3, 0.3)),
                 transforms.Resize((self.trainsize, self.trainsize)),
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406],
                                      [0.229, 0.224, 0.225])])
+
             self.gt_transform = transforms.Compose([
                 transforms.RandomRotation(90, expand=False, center=None, fill=None),
                 transforms.RandomVerticalFlip(p=0.5),
                 transforms.RandomHorizontalFlip(p=0.5),
+                transforms.RandomAffine(0, translate=(0.3, 0.3)),
                 transforms.Resize((self.trainsize, self.trainsize)),
                 transforms.ToTensor()])
             
