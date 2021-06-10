@@ -206,12 +206,15 @@ if __name__ == '__main__':
     else:
         # optimizer = torch.optim.SGD(params, opt.lr, weight_decay = 1e-4, momentum = 0.9)
         optimizer = torch.optim.SGD(params, opt.lr, momentum = 0.9)
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader), epochs=opt.epoch)
-        optimizer = scheduler
 
     print(optimizer)
+
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader), epochs=opt.epoch)
 
     best_dice = 0.0
     for epoch in range(1, opt.epoch):
         #adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
         best_dice = train(train_loader, model, optimizer, epoch, opt.test_path, best_dice)
+
+        if epoch % 20 == 0:
+            scheduler.step()
