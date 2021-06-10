@@ -206,7 +206,7 @@ if __name__ == '__main__':
     else:
         # optimizer = torch.optim.SGD(params, opt.lr, weight_decay = 1e-4, momentum = 0.9)
         optimizer = torch.optim.SGD(params, opt.lr, momentum = 0.9)
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader), epoch=opt.epoch)
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader), epochs=opt.epoch)
         optimizer = scheduler
 
     print(optimizer)
