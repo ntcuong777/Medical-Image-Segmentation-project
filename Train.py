@@ -119,7 +119,8 @@ def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice
         if meandice > best:
             best = meandice
             torch.save(model.state_dict(), save_path + 'Moded-HarD-MSEG-best.pth' )
-            print('[Saving Snapshot:]', save_path + 'Moded-HarD-MSEG-best.pth',meandice)
+            print('[Saving Snapshot:]', save_path + 'Moded-HarD-MSEG-best.pth', 'New best:', meandice)
+        torch.save(model.state_dict(), save_path + 'Moded-HarD-MSEG-last.pth' )
     return best # return best meandice for save the best later 
 
 
