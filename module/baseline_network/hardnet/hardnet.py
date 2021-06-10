@@ -13,22 +13,22 @@ weight_paths = {
 }
 
 class HarDNet(nn.Module):
-    def __init__(self, model_name, activation='relu'):
+    def __init__(self, model_variant, activation='relu'):
         super().__init__()
 
-        assert model_name in ['HarDNet39ds', 'HarDNet68ds', 'HarDNet68', 'HarDNet85']
+        assert model_variant in ['HarDNet39ds', 'HarDNet68ds', 'HarDNet68', 'HarDNet85']
 
         first_ch  = [32, 64]
         second_kernel = 3
         max_pool = True
         grmul = 1.7
         drop_rate = 0.1
-        depth_wise = model_name.endswith('ds') # 'ds' denotes depthwise separable is used
+        depth_wise = model_variant.endswith('ds') # 'ds' denotes depthwise separable is used
 
         self.arch = 68 # Cuong need to save the `arch`
-        if model_name == 'HarDNet39ds':
+        if model_variant == 'HarDNet39ds':
             self.arch = 39
-        elif model_name == 'HarDNet85':
+        elif model_variant == 'HarDNet85':
             self.arch = 85
 
         self.har_d_block_indices = []
@@ -139,10 +139,10 @@ class HarDNet(nn.Module):
                 nn.Dropout(drop_rate),
                 nn.Linear(ch, 1000) ))
         
-        self.__load_pretrained__(model_name=model_name)
+        self.__load_pretrained__(model_variant=model_variant)
 
     
-    def __load_pretrained__(self, model_name):
+    def __load_pretrained__(self, model_variant):
         #### DONE DEFINING NETWORK - STARTS LOADING SAVED WEIGHTS ####
         WORKDIR = os.getcwd()
 
@@ -150,7 +150,7 @@ class HarDNet(nn.Module):
         TEMPDIR = os.path.join(os.getcwd(), 'module/baseline_network/hardnet')
         os.chdir(TEMPDIR)
 
-        self.load_state_dict(torch.load(weight_paths[model_name]))
+        self.load_state_dict(torch.load(weight_paths[model_variant]))
 
         os.chdir(WORKDIR) # back to working directory
 
