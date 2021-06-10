@@ -118,7 +118,10 @@ class HarDNet(nn.Module):
                 nn.Dropout(drop_rate),
                 nn.Linear(ch, 1000) ))
         
+        self.__load_pretrained__(model_name=model_name)
 
+    
+    def __load_pretrained__(self, model_name):
         #### DONE DEFINING NETWORK - STARTS LOADING SAVED WEIGHTS ####
         WORKDIR = os.getcwd()
 
