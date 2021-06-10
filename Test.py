@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import os, argparse
@@ -22,6 +23,10 @@ for _data_name in ['Kvasir']:
     save_path = './results/Moded-HarDMSEG/{}/'.format(_data_name)
     opt = parser.parse_args()
     model = HarDMSEG(model_variant=opt.model, activation=opt.activation, use_attention=opt.use_attention)
+    if torch.cuda.device_count() > 1:
+        print("Let's use", torch.cuda.device_count(), "GPUs!")
+        # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+        model = nn.DataParallel(model)
     model.load_state_dict(torch.load(opt.pth_path))
     model.cuda()
     model.eval()
