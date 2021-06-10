@@ -6,7 +6,7 @@ class Aggregation(nn.Module):
     # dense aggregation, it can be replaced by other aggregation previous, such as DSS, amulet, and so on.
     # used after MSF
     def __init__(self, channel):
-        super(aggregation, self).__init__()
+        super(Aggregation, self).__init__()
         self.relu = nn.ReLU(True)
 
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear')
