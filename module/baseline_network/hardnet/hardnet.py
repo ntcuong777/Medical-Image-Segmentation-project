@@ -85,7 +85,7 @@ class HarDNet(nn.Module):
         if max_pool:
             self.base.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
         else:
-            self.base.append ( DWConvLayer(first_ch[1], first_ch[1], stride=2) )
+            self.base.append ( DWConvLayer(first_ch[1], stride=2) )
 
         # Build all HarDNet blocks
         ch = first_ch[1]
@@ -107,7 +107,7 @@ class HarDNet(nn.Module):
                 if max_pool:
                     self.base.append(nn.MaxPool2d(kernel_size=2, stride=2))
                 else:
-                    self.base.append ( DWConvLayer(ch, ch, stride=2) )
+                    self.base.append ( DWConvLayer(ch, stride=2) )
             
         
         ch = ch_list[blks-1]
