@@ -1,5 +1,5 @@
 import torch.nn as nn
-import torch.nn.function as F
+import torch.nn.functional as F
 
 class DiceLoss(nn.Module):
     def __init__(self, apply_sigmoid=True, smooth=1e-5, weight=None, reduce=True):
