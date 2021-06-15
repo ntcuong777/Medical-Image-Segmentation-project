@@ -18,7 +18,7 @@ class FocalLoss(nn.Module):
         else:
             BCE_loss = F.binary_cross_entropy(inputs, targets)
         targets = targets.type(torch.long)
-        at = self.alpha.gather(0, targets.data.view(-1))
+        at = self.alpha.gather(0, targets.data.view(-1)).view_as(BCE_loss)
         pt = torch.exp(-BCE_loss)
         F_loss = at*(1-pt)**self.gamma * BCE_loss
         return F_loss.mean()
