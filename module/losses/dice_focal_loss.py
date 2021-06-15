@@ -1,4 +1,4 @@
-from .dice_loss_with_logits import DiceLossWithLogits
+from .dice_loss import DiceLossWithLogits
 from .focal_loss import FocalLoss
 import torch.nn as nn
 import torch.nn.functional as F
