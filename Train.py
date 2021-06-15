@@ -11,7 +11,7 @@ import torch.nn.functional as F
 import numpy as np
 from torchinfo import summary
 import torch.nn as nn
-
+from module.losses.dice_focal_loss import DiceFocalLoss
 
 def structure_loss(pred, mask):
     
@@ -70,6 +70,11 @@ def test(model, path):
 
 def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice):
     model.train()
+
+    # ---- the loss to use ----
+    #loss_fn = structure_loss
+    loss_fn = DiceFocalLoss()
+
     # ---- multi-scale training ----
     size_rates = [0.75, 1, 1.25]
     # loss_record2, loss_record3, loss_record4, loss_record5 = AvgMeter(), AvgMeter(), AvgMeter(), AvgMeter()
@@ -90,7 +95,7 @@ def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice
             #lateral_map_5, lateral_map_4, lateral_map_3, lateral_map_2 = model(images)
             lateral_map_5 = model(images)
             # ---- loss function ----
-            loss5 = structure_loss(lateral_map_5, gts)
+            loss5 = loss_fn(lateral_map_5, gts)
             
             
             #loss = loss2 + 0.4*loss3 + 0.4*loss4 + 0.2*loss5    # TODO: try different weights for loss
