@@ -11,22 +11,8 @@ import torch.nn.functional as F
 import numpy as np
 from torchinfo import summary
 import torch.nn as nn
-from module.losses.dice_focal_loss import DiceFocalLoss
-
-def structure_loss(pred, mask):
-    
-    weit = 1 + 5*torch.abs(F.avg_pool2d(mask, kernel_size=31, stride=1, padding=15) - mask)
-    wbce = F.binary_cross_entropy_with_logits(pred, mask, reduce='none')
-    wbce = (weit*wbce).sum(dim=(2, 3)) / weit.sum(dim=(2, 3))
-
-    pred = torch.sigmoid(pred)
-    inter = ((pred * mask)*weit).sum(dim=(2, 3))
-    union = ((pred + mask)*weit).sum(dim=(2, 3))
-    wiou = 1 - (inter + 1)/(union - inter+1)
-    
-    return (wbce + wiou).mean()
-
-
+from utils.losses import StructureLoss, FocalTverskyLoss
+from module.segmenter.segmenter_factory import SegmenterFactory
 
 def test(model, path):
     
@@ -73,7 +59,7 @@ def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice
 
     # ---- the loss to use ----
     #loss_fn = structure_loss
-    loss_fn = DiceFocalLoss()
+    loss_fn = FocalTverskyLoss()
 
     # ---- multi-scale training ----
     size_rates = [0.75, 1, 1.25]
@@ -181,11 +167,11 @@ if __name__ == '__main__':
 
     # ---- build models ----
     # torch.cuda.set_device(0)  # set your gpu device
-    model = HarDMSEG(model_variant='HarDNet68ds', use_attention=True, activation='mish')
-    if torch.cuda.device_count() > 1:
-        print("Let's use", torch.cuda.device_count(), "GPUs!")
-        # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
-        model = nn.DataParallel(model)
+    model = SegmenterFactory.create_segmenter_as(segmenter='Double-Unet')
+    # if torch.cuda.device_count() > 1:
+    #     print("Let's use", torch.cuda.device_count(), "GPUs!")
+    #     # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+    #     model = nn.DataParallel(model)
     
     if opt.resume:
         model.load_state_dict(torch.load(opt.pth_path))

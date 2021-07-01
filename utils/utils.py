@@ -4,6 +4,12 @@ from thop import profile
 from thop import clever_format
 
 
+def autopad(k, p=None):
+    if p is None:
+        p = k // 2 if isinstance(k, int) else [x // 2 for x in k] 
+    return p
+
+
 def clip_gradient(optimizer, grad_clip):
     """
     For calibrating misalignment gradient via cliping gradient technique

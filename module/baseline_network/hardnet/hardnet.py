@@ -162,7 +162,7 @@ class HarDNet(nn.Module):
 
             # HarDMSEG need the output of the last 3 encoder blocks for further processing
             # I need all encoder blocks to append attention layer
-            if i in self.encoder_block_end_indices[len(self.encoder_block_end_indices) - 3:len(self.encoder_block_end_indices)]:
+            if i in self.encoder_block_end_indices:
                 out_branch.append(x)
 
         return out_branch

@@ -61,14 +61,15 @@ class HarDMSEG(nn.Module):
                                                             use_attention=use_attention, activation=activation)
         
 
-    def forward(self, x):
+    def forward(self, x, double_unet_style=False):
         #print("input",x.size())
         
         base_net_out = self.base_net(x)
         
-        x2 = base_net_out[0]
-        x3 = base_net_out[1]
-        x4 = base_net_out[2]
+        # _ = base_net_out[0]
+        x2 = base_net_out[-3]
+        x3 = base_net_out[-2]
+        x4 = base_net_out[-1]
         
         x2_rfb = self.rfb2_1(x2)        # channel -> 32
         x3_rfb = self.rfb3_1(x3)        # channel -> 32
@@ -78,4 +79,7 @@ class HarDMSEG(nn.Module):
 
         lateral_map_5 = F.interpolate(ra5_feat, scale_factor=8, mode='bilinear')    # NOTES: Sup-1 (bs, 1, 44, 44) -> (bs, 1, 352, 352)
 
-        return lateral_map_5 #, lateral_map_4, lateral_map_3, lateral_map_2
+        if not double_unet_style:
+            return lateral_map_5 #, lateral_map_4, lateral_map_3, lateral_map_2
+        else:
+            return lateral_map_5, base_net_out

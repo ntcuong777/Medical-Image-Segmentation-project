@@ -3,12 +3,12 @@ from .hardnet_cbam.hardnet_cbam import HarDNet_CBAM
 
 class BaselineFactory:
     """ 
-    This is the factory of ImageNet baseline network models
-
+    This is the factory of baseline network models
+    The activation used is `mish` by default
     """
 
     @staticmethod
-    def create_baseline_as(baseline_model='hardnet', model_variant='HarDNet68ds', use_attention=False, activation='relu'):
+    def create_baseline_as(baseline_model='hardnet', model_variant='HarDNet68ds', use_attention=False, activation='mish'):
         assert(baseline_model in ['hardnet'])
 
         if baseline_model == 'hardnet':
@@ -21,9 +21,8 @@ class BaselineFactory:
                 return BaselineFactory.create_hardnet_cbam_model(model_variant=model_variant, activation=activation)
 
 
-    def create_hardnet_model(model_variant, activation='relu'):
+    def create_hardnet_model(model_variant, activation='mish'):
         return HarDNet(model_variant=model_variant, activation=activation)
     
-    
-    def create_hardnet_cbam_model(model_variant, activation='relu'):
+    def create_hardnet_cbam_model(model_variant, activation='mish'):
         return HarDNet_CBAM(model_variant, activation=activation)
