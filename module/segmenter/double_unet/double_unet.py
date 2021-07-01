@@ -5,6 +5,7 @@ from module.segmenter.hardmseg.HarDMSEG import HarDMSEG
 
 class DoubleUnet(nn.Module):
     def __init__(self):
+        super(DoubleUnet, self).__init__()
         # I will use default settings of all class because I want to keep things simple
         self.first_network = HarDMSEG(activation='relu', use_attention=False)
         self.second_network = DcUnet(input_channels=4)
