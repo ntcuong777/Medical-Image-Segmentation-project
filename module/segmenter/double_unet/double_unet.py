@@ -9,7 +9,7 @@ class DoubleUnet(nn.Module):
         # I will use default settings of all class because I want to keep things simple
         self.first_network = HarDMSEG(activation='relu', use_attention=False)
         self.second_network = DcUnet(input_channels=4)
-        self.last_conv = nn.Conv2d(in_channels=2, out_channels=1, kernel_size=7, padding='same')
+        self.last_conv = nn.Conv2d(in_channels=2, out_channels=1, kernel_size=7, padding=3)
     
     def forward(self, inputs, use_sigmoid=False):
         # first_net_out, first_net_enc = self.first_network(inputs, double_unet_style=True)
