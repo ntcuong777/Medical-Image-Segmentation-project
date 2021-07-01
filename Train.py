@@ -4,7 +4,6 @@ from torch.autograd import Variable
 import os
 import argparse
 from datetime import datetime
-from module.segmenter.HarDMSEG import HarDMSEG
 from utils.dataloader import get_loader,test_dataset
 from utils.utils import clip_gradient, adjust_lr, AvgMeter
 import torch.nn.functional as F
