@@ -23,7 +23,7 @@ class SegmenterFactory:
     def create_hardmseg_model(use_attention=False, activation='mish'):
         return HarDMSEG(activation=activation, use_attention=use_attention)
 
-    def create_dcunet_model(activation='mish', double_unet_style=True):
+    def create_dcunet_model(activation='mish', double_unet_style=False):
         if not double_unet_style:
             return DcUnet(input_channels=3)
         else:
