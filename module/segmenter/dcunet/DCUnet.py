@@ -19,6 +19,8 @@ class DWSepConvBlock(nn.Module):
         self.pointwise = nn.Conv2d(input_channels, output_channels, kernel_size=1)
         self.bn = nn.BatchNorm2d(num_features=output_channels)
         self.activation = activation
+        self.input_channels = input_channels
+        self.output_channels = output_channels
 
 
     def forward(self, x):
