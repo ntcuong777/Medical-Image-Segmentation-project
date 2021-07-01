@@ -12,10 +12,12 @@ class DoubleUnet(nn.Module):
         self.last_conv = nn.Conv2d(in_channels=2, out_channels=1, kernel_size=7, padding='same')
     
     def forward(self, inputs, use_sigmoid=False):
-        first_net_out, first_net_enc = self.first_network(inputs, double_unet_style=True)
+        # first_net_out, first_net_enc = self.first_network(inputs, double_unet_style=True)
+        first_net_out = self.first_network(inputs, double_unet_style=False)
         x = torch.cat((first_net_out, inputs), dim=1) # I will concatenate by depth instead of multiplying
         
-        second_net_out = self.second_network(x, first_net_enc)
+        # second_net_out = self.second_network(x, first_net_enc)
+        second_net_out = self.second_network(x)
         out = torch.cat((first_net_out, second_net_out), dim=1) # Concatenate by depth
         out = self.last_conv(out)
         if use_sigmoid:
