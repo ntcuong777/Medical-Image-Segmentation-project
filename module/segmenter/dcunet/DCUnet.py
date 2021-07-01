@@ -196,7 +196,7 @@ class ResPath(nn.Module):
                  output_channels: int,
                  length: int,
                  padding: Union[int, None] = None,
-                 depthwise_conv: bool = True): 
+                 depthwise_conv: bool = False): 
         super(ResPath, self).__init__()
         self.length = length
         self.input_channels = input_channels
