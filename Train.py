@@ -190,7 +190,7 @@ if __name__ == '__main__':
     total_step = len(train_loader)
 
     # Summarize model
-    summary(model, input_size=(32, 3, 512, 512))
+    # summary(model, input_size=(32, 3, 512, 512))
 
     print("#"*20, "Start Training", "#"*20)
 
