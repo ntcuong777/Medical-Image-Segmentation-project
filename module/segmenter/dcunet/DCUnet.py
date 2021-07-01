@@ -109,6 +109,7 @@ class ConvTranspose(nn.Module):
         if x3 is None: # We do not utilize the Double-Unet style
             out = torch.cat([x2, out], dim=1)
         else:
+            x3 = F.interpolate(x3, size=(x2.shape[2], x2.shape[3]), mode='nearest')
             out = torch.cat([x3, x2, out], dim=1)
         return out
 
