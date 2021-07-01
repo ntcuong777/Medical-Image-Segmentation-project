@@ -1,12 +1,13 @@
 import torch
 import torch.nn as nn
-from module.segmenter.segmenter_factory import SegmenterFactory
+from segmenter.dcunet.DCUnet import DcUnet
+from segmenter.hardmseg.HarDMSEG import HarDMSEG
 
 class DoubleUnet(nn.Module):
     def __init__(self):
         # I will use default settings of all class because I want to keep things simple
-        self.first_network = SegmenterFactory.create_segmenter_as(baseline_model='HarDMEG')
-        self.second_network = SegmenterFactory.create_segmenter_as(baseline_model='DCUnet')
+        self.first_network = HarDMSEG(activation='relu', use_attention=False)
+        self.second_network = DcUnet(input_channels=4)
         self.last_conv = nn.Conv2d(in_channels=2, out_channels=1, kernel_size=7, padding='same')
     
     def forward(self, inputs, use_sigmoid=False):
