@@ -27,8 +27,8 @@ class DWSepConvBlock(nn.Module):
         out = self.depthwise(x)
         out = self.pointwise(out)
         out = self.bn(out)
-        if self.activation is not None:
-            out = self.activation(out)
+        if self.activation:
+            out = F.relu(out)
         return out
 
 
