@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from segmenter.dcunet.DCUnet import DcUnet
-from segmenter.hardmseg.HarDMSEG import HarDMSEG
+from module.segmenter.dcunet.DCUnet import DcUnet
+from module.segmenter.hardmseg.HarDMSEG import HarDMSEG
 
 class DoubleUnet(nn.Module):
     def __init__(self):
