@@ -20,6 +20,9 @@ for c in range(10):
         images, gts = pack
         images = images.permute(0, 2, 3, 1).numpy()
         gts = gts.permute(0, 2, 3, 1).squeeze().numpy()
+
+        images = (images * 255.0).astype(np.uint8)
+        gts = (gts * 255.0).astype(np.uint8)
         for j in range(100):
             Image.fromarray(images[j, ...]).save('augmented_data/train/images/%06d.png' % img_count)
             Image.fromarray(gts[j, ...]).save('augmented_data/train/masks/%06d.png' % img_count)
