@@ -18,8 +18,8 @@ for c in range(10):
     for i, pack in enumerate(train_loader, start=1):
         # ---- data prepare ----
         images, gts = pack
-        images = images.numpy().permute(0, 2, 3, 1)
-        gts = gts.numpy().permute(0, 2, 3, 1).squeeze()
+        images = images.permute(0, 2, 3, 1).numpy()
+        gts = gts.permute(0, 2, 3, 1).squeeze().numpy()
         for j in range(100):
             Image.fromarray(images[j, ...]).save('augmented_data/train/images/%06d.png' % img_count)
             Image.fromarray(gts[j, ...]).save('augmented_data/train/masks/%06d.png' % img_count)
