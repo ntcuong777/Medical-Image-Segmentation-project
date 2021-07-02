@@ -50,12 +50,12 @@ class HarDMSEG(nn.Module):
         x3_rfb = self.rfb3_1(x3)        # channel -> 32
         x4_rfb = self.rfb4_1(x4)        # channel -> 32
         
-        ra5_feat = self.agg1(x4_rfb, x3_rfb, x2_rfb)
+        out = self.agg1(x4_rfb, x3_rfb, x2_rfb)
 
         if get_segmentation_result:
-            lateral_map_5 = F.interpolate(ra5_feat, scale_factor=8, mode='bilinear')    # NOTES: Sup-1 (bs, 1, 44, 44) -> (bs, 1, 352, 352)
+            out = F.interpolate(out, scale_factor=8, mode='bilinear')    # NOTES: Sup-1 (bs, 1, 44, 44) -> (bs, 1, 352, 352)
 
         if get_segmentation_result:
-            return lateral_map_5 #, lateral_map_4, lateral_map_3, lateral_map_2
+            return out #, lateral_map_4, lateral_map_3, lateral_map_2
         else:
-            return lateral_map_5, base_net_out
+            return out, base_net_out
