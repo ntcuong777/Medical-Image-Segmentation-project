@@ -23,7 +23,7 @@ class ConvLayer(nn.Sequential):
         elif activation == 'mish':
             self.add_module('mish', Mish())
         elif activation == 'hard_swish':
-            self.add_module('hard_swish', nn.HardSwish(True))
+            self.add_module('hard_swish', nn.Hardswish(True))
         else:
             raise NotImplementedError("Activation not supported")
 

@@ -14,7 +14,7 @@ class DWSepConvBlock(nn.Module):
         elif activation == 'mish':
             self.activation = Mish()
         elif activation == 'hard_swish':
-            self.activation = nn.HardSwish(True)
+            self.activation = nn.Hardswish(True)
         else:
             raise NotImplementedError("Activation not implemented")
         self.input_channels = input_channels
