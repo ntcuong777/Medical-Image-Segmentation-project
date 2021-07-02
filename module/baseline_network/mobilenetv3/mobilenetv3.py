@@ -16,15 +16,15 @@ class MobileNetV3(nn.Module):
         baseline = mobilenet_v3_large(pretrained=True).features # Omit the classification layer
         if get_only_3_last_encoder:
             # get the non-linear transformation after the 3rd downsampling layer
-            self.enc_1 = nn.Sequential(*[baseline.features[i] for i in range(5, 7)])
-            self.enc_2 = nn.Sequential(*[baseline.features[i] for i in range(7, 13)])
-            self.enc_3 = nn.Sequential(*[baseline.features[i] for i in range(13, 17)])
+            self.enc_1 = nn.Sequential(*[baseline[i] for i in range(5, 7)])
+            self.enc_2 = nn.Sequential(*[baseline[i] for i in range(7, 13)])
+            self.enc_3 = nn.Sequential(*[baseline[i] for i in range(13, 17)])
         else:
-            self.enc_1 = nn.Sequential(*[baseline.features[i] for i in range(0, 2)])
-            self.enc_2 = nn.Sequential(*[baseline.features[i] for i in range(2, 4)])
-            self.enc_3 = nn.Sequential(*[baseline.features[i] for i in range(4, 7)])
-            self.enc_4 = nn.Sequential(*[baseline.features[i] for i in range(7, 13)])
-            self.enc_5 = nn.Sequential(*[baseline.features[i] for i in range(13, 17)])
+            self.enc_1 = nn.Sequential(*[baseline[i] for i in range(0, 2)])
+            self.enc_2 = nn.Sequential(*[baseline[i] for i in range(2, 4)])
+            self.enc_3 = nn.Sequential(*[baseline[i] for i in range(4, 7)])
+            self.enc_4 = nn.Sequential(*[baseline[i] for i in range(7, 13)])
+            self.enc_5 = nn.Sequential(*[baseline[i] for i in range(13, 17)])
 
     def forward(self, x):
         if not self.get_only_3_last_encoder:
