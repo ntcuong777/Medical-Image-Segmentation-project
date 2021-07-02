@@ -53,7 +53,7 @@ def test(model, path):
 
 
 
-def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice):
+def train(train_loader, model, optimizer, epoch, test_path, best_dice):
     model.train()
 
     # ---- the loss to use ----
@@ -89,7 +89,6 @@ def train(train_loader, model, optimizer, scheduler, epoch, test_path, best_dice
             loss.backward()
             clip_gradient(optimizer, opt.clip)
             optimizer.step()
-            scheduler.step() # step scheduler
             # ---- recording loss ----
             if rate == 1:
                 loss_record5.update(loss5.data, opt.batchsize)
@@ -165,12 +164,12 @@ if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # ---- build models ----
-    # torch.cuda.set_device(0)  # set your gpu device
-    model = SegmenterFactory.create_segmenter_as(segmenter='DCUnet')
-    if torch.cuda.device_count() > 1:
-        print("Let's use", torch.cuda.device_count(), "GPUs!")
-        # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
-        model = nn.DataParallel(model)
+    torch.cuda.set_device(0)  # set your gpu device
+    model = SegmenterFactory.create_segmenter_as(segmenter='MobileWnet')
+    # if torch.cuda.device_count() > 1:
+    #     print("Let's use", torch.cuda.device_count(), "GPUs!")
+    #     # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+    #     model = nn.DataParallel(model)
     
     if opt.resume:
         model.load_state_dict(torch.load(opt.pth_path))
@@ -190,7 +189,7 @@ if __name__ == '__main__':
     total_step = len(train_loader)
 
     # Summarize model
-    # summary(model, input_size=(32, 3, 512, 512))
+    summary(model, input_size=(8, 3, 512, 512))
 
     print("#"*20, "Start Training", "#"*20)
 
@@ -203,9 +202,7 @@ if __name__ == '__main__':
 
     print(optimizer)
 
-    scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.3, steps_per_epoch=len(train_loader)*3, epochs=opt.epoch)
-
     best_dice = 0.0
     for epoch in range(1, opt.epoch):
         # adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
-        best_dice = train(train_loader, model, optimizer, scheduler, epoch, opt.test_path, best_dice)
+        best_dice = train(train_loader, model, optimizer, epoch, opt.test_path, best_dice)

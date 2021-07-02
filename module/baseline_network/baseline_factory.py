@@ -8,7 +8,7 @@ class BaselineFactory:
     """
 
     @staticmethod
-    def create_baseline_as(baseline_model='hardnet', model_variant='HarDNet68ds', use_attention=False, activation='mish'):
+    def create_baseline_as(baseline_model='hardnet', model_variant='HarDNet68ds', use_attention=False, activation='hard_swish'):
         assert(baseline_model in ['hardnet'])
 
         if baseline_model == 'hardnet':
@@ -21,8 +21,8 @@ class BaselineFactory:
                 return BaselineFactory.create_hardnet_cbam_model(model_variant=model_variant, activation=activation)
 
 
-    def create_hardnet_model(model_variant, activation='mish'):
+    def create_hardnet_model(model_variant, activation='hard_swish'):
         return HarDNet(model_variant=model_variant, activation=activation)
     
-    def create_hardnet_cbam_model(model_variant, activation='mish'):
+    def create_hardnet_cbam_model(model_variant, activation='hard_swish'):
         return HarDNet_CBAM(model_variant, activation=activation)

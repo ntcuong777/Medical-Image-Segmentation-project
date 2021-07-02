@@ -166,27 +166,27 @@ class HarDNet(nn.Module):
                 out_branch.append(x)
 
         return out_branch
-    
 
-def load_hardnet_baseline(arch=68, depth_wise=False, pretrained=True):
-    if arch == 39:
-        raise NotImplementedError("HarDNet39ds is not supported!")
-    elif arch == 68:
-        print("Loading HarDNet68{:s}".format("ds" if depth_wise else ""))
-        model = HarDNet(arch=68, depth_wise=depth_wise)
-        if pretrained:
-            if not depth_wise:
-                weights = torch.load(weight_paths['HarDNet68'])
-            else:
-                weights = torch.load(weight_paths['HarDNet68ds'])
 
-            model.load_state_dict(weights)
-            print("68 LOADED READY")
-    elif arch == 85:
-        print("85 LOADED")
-        model = HarDNet(arch=85)
-        if pretrained:
-            weights = torch.load(weight_paths['HarDNet85'])
-            model.load_state_dict(weights)
+# def load_hardnet_baseline(arch=68, depth_wise=False, pretrained=True):
+#     if arch == 39:
+#         raise NotImplementedError("HarDNet39ds is not supported!")
+#     elif arch == 68:
+#         print("Loading HarDNet68{:s}".format("ds" if depth_wise else ""))
+#         model = HarDNet(arch=68, depth_wise=depth_wise)
+#         if pretrained:
+#             if not depth_wise:
+#                 weights = torch.load(weight_paths['HarDNet68'])
+#             else:
+#                 weights = torch.load(weight_paths['HarDNet68ds'])
 
-    return model
+#             model.load_state_dict(weights)
+#             print("68 LOADED READY")
+#     elif arch == 85:
+#         print("85 LOADED")
+#         model = HarDNet(arch=85)
+#         if pretrained:
+#             weights = torch.load(weight_paths['HarDNet85'])
+#             model.load_state_dict(weights)
+
+#     return model

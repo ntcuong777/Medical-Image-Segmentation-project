@@ -11,8 +11,12 @@ class RFB_modified(nn.Module):
 
         if activation == 'relu':
             self.activation = nn.ReLU(True)
-        else:
+        elif activation == 'mish':
             self.activation = Mish()
+        elif activation == 'hard_swish':
+            self.activation = nn.HardSwish(True)
+        else:
+            raise NotImplementedError("Activation not implemented!")
 
         self.branch0 = nn.Sequential(
             BasicConv2d(in_channel, out_channel, 1),

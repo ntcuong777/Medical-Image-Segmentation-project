@@ -1,6 +1,5 @@
 from .hardmseg.HarDMSEG import HarDMSEG
-from .dcunet.DCUnet import DcUnet
-from .double_unet.double_unet import DoubleUnet
+from .mobile_w_net.mobile_w_net import MobileWnet
 
 class SegmenterFactory:
     """ 
@@ -9,25 +8,17 @@ class SegmenterFactory:
     """
 
     @staticmethod
-    def create_segmenter_as(segmenter='HarDMSEG', use_attention=False, activation='mish'):
-        assert(segmenter in ['HarDMSEG', 'Double-Unet', 'DCUnet'])
+    def create_segmenter_as(segmenter='HarDMSEG', use_attention=False, activation='hard_swish'):
+        assert(segmenter in ['HarDMSEG', 'MobileWnet'])
 
         if segmenter == 'HarDMSEG':
             return SegmenterFactory.create_hardmseg_model(use_attention=use_attention, activation=activation)
-        elif segmenter == 'DCUnet':
-            return SegmenterFactory.create_dcunet_model(activation=activation)
-        elif segmenter == 'Double-Unet':
-            return SegmenterFactory.create_double_unet_model()
+        elif segmenter == 'MobileWnet':
+            return SegmenterFactory.create_mobilewnet_model(activation=activation)
 
 
-    def create_hardmseg_model(use_attention=False, activation='mish'):
+    def create_hardmseg_model(use_attention=False, activation='hard_swish'):
         return HarDMSEG(activation=activation, use_attention=use_attention)
 
-    def create_dcunet_model(activation='mish', double_unet_style=False):
-        if not double_unet_style:
-            return DcUnet(input_channels=3)
-        else:
-            return DcUnet(input_channels=4)
-
-    def create_double_unet_model():
-        return DoubleUnet()
+    def create_mobilewnet_model(activation='hard_swish'):
+        return MobileWnet(activation=activation)
