@@ -7,7 +7,7 @@ class RFB_modified(nn.Module):
     def __init__(self, in_channel, out_channel, activation='relu'):
         super(RFB_modified, self).__init__()
 
-        assert activation in ['relu', 'mish']
+        assert activation in ['relu', 'mish', 'hard_swish']
 
         if activation == 'relu':
             self.activation = nn.ReLU(True)
