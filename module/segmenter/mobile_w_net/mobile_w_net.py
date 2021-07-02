@@ -18,7 +18,7 @@ class MobileWnet(nn.Module):
         ch1, ch2, ch3, ch4, ch5, ch6 = 32, 64, 128, 40, 112, 960
 
         # ---- Decoder - Second part of Wnet is Unet-like
-        self.upsample = nn.Upsample(scale_factor=2, mode='nearest', align_corners=False)
+        self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
         self.decoder1 = double_dw_conv(ch6+ch5, 512)
         self.decoder2 = double_dw_conv(ch4+512, 256)
         self.decoder3 = double_dw_conv(ch3+256, 128)
