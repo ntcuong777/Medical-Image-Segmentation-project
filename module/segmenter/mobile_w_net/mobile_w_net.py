@@ -28,7 +28,7 @@ class MobileWnet(nn.Module):
 
 
     def forward(self, inputs, use_sigmoid=False):
-        first_net_out, first_net_enc = self.first_network(inputs, double_unet_style=True)
+        first_net_out, first_net_enc = self.first_network(inputs, get_segmentation_result=False)
         first_net_enc_1 = first_net_enc[0]
         first_net_enc_2 = first_net_enc[1]
         first_net_enc_3 = first_net_enc[2]
