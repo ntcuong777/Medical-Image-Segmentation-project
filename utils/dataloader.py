@@ -27,12 +27,6 @@ class PolypDataset(data.Dataset):
                 transforms.RandomRotation(90, expand=False, center=None, fill=None),
                 transforms.RandomVerticalFlip(p=0.5),
                 transforms.RandomHorizontalFlip(p=0.5),
-                transforms.RandomAffine(0, translate=(0.2, 0.2)),
-                transforms.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5)),
-                transforms.ColorJitter(brightness=.5, hue=.3),
-                transforms.RandomAdjustSharpness(sharpness_factor=2),
-                transforms.RandomAutocontrast(),
-                transforms.RandomEqualize(),
                 transforms.Resize((self.trainsize, self.trainsize)),
                 transforms.ToTensor(),
                 transforms.Normalize([0.485, 0.456, 0.406],
@@ -42,7 +36,6 @@ class PolypDataset(data.Dataset):
                 transforms.RandomRotation(90, expand=False, center=None, fill=None),
                 transforms.RandomVerticalFlip(p=0.5),
                 transforms.RandomHorizontalFlip(p=0.5),
-                transforms.RandomAffine(0, translate=(0.2, 0.2)),
                 transforms.Resize((self.trainsize, self.trainsize)),
                 transforms.ToTensor()])
             
