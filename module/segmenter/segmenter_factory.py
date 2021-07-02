@@ -1,10 +1,11 @@
 from .hardmseg.HarDMSEG import HarDMSEG
 from .mobile_w_net.mobile_w_net import MobileWnet
 
+# Factory design pattern
 class SegmenterFactory:
     """ 
     This is the factory of segmenter models
-    The activation used is `mish` by default
+    The activation used is `hard_swish` by default
     """
 
     @staticmethod

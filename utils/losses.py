@@ -1,5 +1,8 @@
 """
     This source code is borrowed from https://github.com/Latterlig96/DCUnet/blob/main/loss.py
+    It contains several losses for medical image segmentation task.
+    The StructureLoss class initially not here but HarDMSEQ's author uses it, so I have made
+    a class for it. The original code is just a function :(
 """
 
 import torch

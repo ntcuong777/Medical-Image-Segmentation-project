@@ -4,6 +4,9 @@ from module.baseline_network.baseline_factory import BaselineFactory
 from module.useful_blocks.aggregation import Aggregation
 from module.useful_blocks.rfb_modified import RFB_modified
 
+# This class is copied from the original author.
+# It has gone through several modifications since the author
+# make this class overloaded with stuffs that are unnecessary.
 class HarDMSEG(nn.Module):
     # res2net based encoder decoder
     def __init__(self, model_variant='HarDNet68ds', activation='relu', channel=32, use_attention=False, w_net_style=False):

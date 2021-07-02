@@ -1,10 +1,15 @@
 from .hardnet.hardnet import HarDNet
 from .hardnet_cbam.hardnet_cbam import HarDNet_CBAM
 
+"""
+I set default HarDNet variant as `HarDNet68ds` since I want to use
+depthwise convolution only (for performance reason). The model is
+already large enough, I want more speed.
+"""
 class BaselineFactory:
     """ 
     This is the factory of baseline network models
-    The activation used is `mish` by default
+    The activation used is `hard_swish` by default
     """
 
     @staticmethod

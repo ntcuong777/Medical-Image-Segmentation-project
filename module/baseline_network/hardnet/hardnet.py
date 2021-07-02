@@ -1,4 +1,13 @@
-from typing import Counter
+"""
+This file is copied from the original author. Some modifications have been
+made just because the author's orignal code is ..... (you can fill in the
+blanks for yourself, I wont do it).
+
+I know that it still looks pretty unorganized but I cannot do anything better
+to this code :(
+However, I've tried to explain much of the things I added.
+"""
+
 import torch
 import torch.nn as nn
 from .custom_layers import *
@@ -165,27 +174,3 @@ class HarDNet(nn.Module):
                 out_branch.append(x)
 
         return out_branch
-
-
-# def load_hardnet_baseline(arch=68, depth_wise=False, pretrained=True):
-#     if arch == 39:
-#         raise NotImplementedError("HarDNet39ds is not supported!")
-#     elif arch == 68:
-#         print("Loading HarDNet68{:s}".format("ds" if depth_wise else ""))
-#         model = HarDNet(arch=68, depth_wise=depth_wise)
-#         if pretrained:
-#             if not depth_wise:
-#                 weights = torch.load(weight_paths['HarDNet68'])
-#             else:
-#                 weights = torch.load(weight_paths['HarDNet68ds'])
-
-#             model.load_state_dict(weights)
-#             print("68 LOADED READY")
-#     elif arch == 85:
-#         print("85 LOADED")
-#         model = HarDNet(arch=85)
-#         if pretrained:
-#             weights = torch.load(weight_paths['HarDNet85'])
-#             model.load_state_dict(weights)
-
-#     return model
