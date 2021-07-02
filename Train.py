@@ -107,11 +107,11 @@ def train(train_loader, model, optimizer, epoch, test_path, best_dice):
         print('{} Epoch [{:03d}/{:03d}], mDice = {:05f}'.format(datetime.now(), epoch, opt.epoch, meandice))
         if meandice > best:
             best = meandice
-            torch.save(model.state_dict(), save_path + 'Moded-HarD-MSEG-best.pth' )
-            print('[Saving Snapshot:]', save_path + 'Moded-HarD-MSEG-best.pth', 'New best:', meandice)
+            torch.save(model.state_dict(), save_path + 'Medical_Model-best.pth' )
+            print('[Saving Snapshot:]', save_path + 'Medical_Model-best.pth', 'New best:', meandice)
         else:
             print('Current best is:', best)
-        torch.save(model.state_dict(), save_path + 'Moded-HarD-MSEG-last.pth' )
+        torch.save(model.state_dict(), save_path + 'Medical_Model-last.pth')
     return best # return best meandice for save the best later 
 
 
@@ -166,10 +166,10 @@ if __name__ == '__main__':
     # ---- build models ----
     torch.cuda.set_device(0)  # set your gpu device
     model = SegmenterFactory.create_segmenter_as(segmenter='MobileWnet')
-    # if torch.cuda.device_count() > 1:
-    #     print("Let's use", torch.cuda.device_count(), "GPUs!")
-    #     # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
-    #     model = nn.DataParallel(model)
+    if torch.cuda.device_count() > 1:
+        print("Let's use", torch.cuda.device_count(), "GPUs!")
+        # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+        model = nn.DataParallel(model)
     
     if opt.resume:
         model.load_state_dict(torch.load(opt.pth_path))
@@ -189,7 +189,7 @@ if __name__ == '__main__':
     total_step = len(train_loader)
 
     # Summarize model
-    summary(model, input_size=(8, 3, 512, 512))
+    # summary(model, input_size=(8, 3, 512, 512))
 
     print("#"*20, "Start Training", "#"*20)
 
