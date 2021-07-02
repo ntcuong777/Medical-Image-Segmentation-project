@@ -10,46 +10,64 @@ import torch.nn.functional as F
 import numpy as np
 from torchinfo import summary
 import torch.nn as nn
-from utils.losses import StructureLoss, FocalTverskyLoss
+from utils.losses import StructureLoss, FocalTverskyLoss, DiceFocalLoss, DiceBCELoss
 from module.segmenter.segmenter_factory import SegmenterFactory
 
-def test(model, path):
+def test(model, path, requires_test=True):
     
     ##### put ur data_path of TestDataSet/Kvasir here #####
     data_path = path
     #####                                             #####
-    
-    model.eval()
-    image_root = '{}/images/'.format(data_path)
-    gt_root = '{}/masks/'.format(data_path)
-    test_loader = test_dataset(image_root, gt_root, 352)
-    b=0.0
-    for i in range(100):
-        image, gt, name = test_loader.load_data()
-        gt = np.asarray(gt, np.float32)
-        gt /= (gt.max() + 1e-8)
-        image = image.cuda()
-        
-        res  = model(image)
-        res = F.interpolate(res, size=gt.shape, mode='bilinear')
-        res = res.sigmoid().data.cpu().numpy().squeeze()
-        res = (res - res.min()) / (res.max() - res.min() + 1e-8)
-        
-        input = res
-        target = np.array(gt)
-        smooth = 1
-        input_flat = np.reshape(input,(-1))
-        target_flat = np.reshape(target,(-1))
- 
-        intersection = (input_flat*target_flat)
-        
-        loss =  (2 * intersection.sum() + smooth) / (input.sum() + target.sum() + smooth)
 
-        a =  '{:.4f}'.format(loss)
-        a = float(a)
-        b = b + a
-        
-    return b/100
+    dirs_in_path = None
+    if requires_test:
+        dirs_in_path = [f for f in os.listdir(data_path) if os.path.isdir(os.path.join(data_path, f))]
+
+    if (requires_test) and ('images' in dirs_in_path) and ('masks' in dirs_in_path) and (len(dirs_in_path) > 2):
+        # The folder contains data from different datasets
+        sum_acc = 0
+        for fol in dirs_in_path:
+            if fol == 'images' or fol == 'masks':
+                continue
+            
+            # recursive call to eval each dataset separately, we have already know that the recursive call
+            # will be given a specific dataset folder, no need to test it again 
+            sum_acc += test(model, os.path.join(data_path, fol), requires_test=False)
+
+        return sum_acc / (len(dirs_in_path) - 2) # Average accuracy over all datasets
+
+    else: # The folder only contains data from one dataset only
+        model.eval()
+        image_root = '{}/images/'.format(data_path)
+        gt_root = '{}/masks/'.format(data_path)
+        test_loader = test_dataset(image_root, gt_root, 352)
+        b=0.0
+        for i in range(100):
+            image, gt, _ = test_loader.load_data()
+            gt = np.asarray(gt, np.float32)
+            gt /= (gt.max() + 1e-8)
+            image = image.cuda()
+            
+            res  = model(image)
+            res = F.interpolate(res, size=gt.shape, mode='bilinear')
+            res = res.sigmoid().data.cpu().numpy().squeeze()
+            res = (res - res.min()) / (res.max() - res.min() + 1e-8)
+            
+            input = res
+            target = np.array(gt)
+            smooth = 1
+            input_flat = np.reshape(input,(-1))
+            target_flat = np.reshape(target,(-1))
+    
+            intersection = (input_flat*target_flat)
+
+            loss =  (2 * intersection.sum() + smooth) / (input.sum() + target.sum() + smooth)
+
+            a =  '{:.4f}'.format(loss)
+            a = float(a)
+            b = b + a
+
+        return b/100
 
 
 
