@@ -31,7 +31,6 @@ class MobileWnet(nn.Module):
         first_net_out, first_net_enc = self.first_network(inputs, get_segmentation_result=False)
         first_net_enc_1 = first_net_enc[0]
         first_net_enc_2 = first_net_enc[1]
-        first_net_enc_3 = first_net_enc[2]
         
         second_net_out = self.second_network(first_net_out)
         x2 = second_net_out[0]
@@ -48,15 +47,15 @@ class MobileWnet(nn.Module):
         out = self.decoder2(out)
         out = self.upsample(out)
 
-        out = torch.cat((out, first_net_enc_3), dim=1)
+        out = torch.cat((out, first_net_enc_2), dim=1)
         out = self.decoder3(out)
         out = self.upsample(out)
 
-        out = torch.cat((out, first_net_enc_2), dim=1)
+        out = torch.cat((out, first_net_enc_1), dim=1)
         out = self.decoder4(out)
         out = self.upsample(out)
 
-        out = torch.cat((out, first_net_enc_1), dim=1)
+        # There is no encoder layer with the same dimension as the input, no concat here
         out = self.decoder5(out)
         out = self.conv_last(out)
 

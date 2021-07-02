@@ -74,7 +74,6 @@ class HarDNet(nn.Module):
         self.base.append(ConvLayer(in_channels=3, out_channels=first_ch[0], kernel=3,
                             stride=2, activation=activation, bias=False))
         count_layers += 1 # one layer added
-        self.encoder_block_end_indices.append(count_layers - 1)
   
         # Second Encoder block
         self.base.append(ConvLayer(first_ch[0], first_ch[1], kernel=second_kernel, activation=activation))
