@@ -15,7 +15,7 @@ class MobileWnet(nn.Module):
         self.first_network = HarDMSEG(activation=activation, w_net_style=True)
         self.second_network = MobileNetV3(True)
 
-        ch1, ch2, ch3, ch4, ch5, ch6 = 32, 64, 128, 40, 112, 960
+        _, ch2, ch3, ch4, ch5, ch6 = 32, 64, 128, 40, 112, 960
 
         # ---- Decoder - Second part of Wnet is Unet-like
         self.upsample = nn.Upsample(scale_factor=2, mode='nearest')
@@ -23,7 +23,7 @@ class MobileWnet(nn.Module):
         self.decoder2 = double_dw_conv(ch4+512, 256)
         self.decoder3 = double_dw_conv(ch3+256, 128)
         self.decoder4 = double_dw_conv(ch2+128, 64)
-        self.decoder5 = double_dw_conv(ch1+64, 32)
+        self.decoder5 = double_dw_conv(64, 32)
         self.conv_last = DWSepConvBlock(32, 1, activation=activation)
 
 
