@@ -32,7 +32,7 @@ class DiceLoss(nn.Module):
                 smooth: int=1
                 ) -> torch.Tensor:
         
-        inputs = F.sigmoid(inputs)       
+        inputs = torch.sigmoid(inputs)       
         
         inputs = inputs.view(-1)
         targets = targets.view(-1)
@@ -52,7 +52,7 @@ class DiceBCELoss(nn.Module):
                 smooth: int=1
                 ) -> torch.Tensor:
         
-        inputs = F.sigmoid(inputs)       
+        inputs = torch.sigmoid(inputs)       
         
         inputs = inputs.view(-1)
         targets = targets.view(-1)
@@ -76,7 +76,7 @@ class FocalLoss(nn.Module):
                 gamma: int=2
                 ) -> torch.Tensor:
         
-        inputs = F.sigmoid(inputs)       
+        inputs = torch.sigmoid(inputs)       
         
         inputs = inputs.view(-1)
         targets = targets.view(-1)
@@ -113,7 +113,7 @@ class TverskyLoss(nn.Module):
                 alpha: int=0.75
                 ) -> torch.Tensor:
         
-        inputs = F.sigmoid(inputs)       
+        inputs = torch.sigmoid(inputs)       
         
         inputs = inputs.view(-1)
         targets = targets.view(-1)
@@ -138,7 +138,7 @@ class FocalTverskyLoss(nn.Module):
                 gamma: int=0.75
                 ) -> torch.Tensor:
         
-        inputs = F.sigmoid(inputs)       
+        inputs = torch.sigmoid(inputs)       
         
         inputs = inputs.view(-1)
         targets = targets.view(-1)
