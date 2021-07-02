@@ -42,20 +42,24 @@ class MobileWnet(nn.Module):
         
         out = torch.cat((out, x3), dim=1)
         out = self.decoder1(out)
+        out = self.upsample(out)
 
         out = torch.cat((out, x2), dim=1)
         out = self.decoder2(out)
+        out = self.upsample(out)
 
         out = torch.cat((out, first_net_enc_3), dim=1)
         out = self.decoder3(out)
+        out = self.upsample(out)
 
         out = torch.cat((out, first_net_enc_2), dim=1)
         out = self.decoder4(out)
+        out = self.upsample(out)
 
         out = torch.cat((out, first_net_enc_1), dim=1)
         out = self.decoder5(out)
-
         out = self.conv_last(out)
+
         if use_sigmoid:
             return out.sigmoid()
         else:
