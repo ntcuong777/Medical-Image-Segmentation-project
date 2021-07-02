@@ -57,12 +57,10 @@ def train(train_loader, model, optimizer, epoch, test_path, best_dice):
     model.train()
 
     # ---- the loss to use ----
-    #loss_fn = structure_loss
     loss_fn = FocalTverskyLoss()
 
     # ---- multi-scale training ----
     size_rates = [0.75, 1, 1.25]
-    # loss_record2, loss_record3, loss_record4, loss_record5 = AvgMeter(), AvgMeter(), AvgMeter(), AvgMeter()
     loss_record5 = AvgMeter()
     for i, pack in enumerate(train_loader, start=1):
         for rate in size_rates:
@@ -76,28 +74,30 @@ def train(train_loader, model, optimizer, epoch, test_path, best_dice):
             if rate != 1:
                 images = F.interpolate(images, size=(trainsize, trainsize), mode='bilinear')
                 gts = F.interpolate(gts, size=(trainsize, trainsize), mode='bilinear')
+
             # ---- forward ----
-            #lateral_map_5, lateral_map_4, lateral_map_3, lateral_map_2 = model(images)
-            lateral_map_5 = model(images)
+            out = model(images)
+
             # ---- loss function ----
-            loss5 = loss_fn(lateral_map_5, gts)
+            loss = loss_fn(out, gts)
             
-            
-            #loss = loss2 + 0.4*loss3 + 0.4*loss4 + 0.2*loss5    # TODO: try different weights for loss
-            loss = loss5
             # ---- backward ----
             loss.backward()
             clip_gradient(optimizer, opt.clip)
             optimizer.step()
+
             # ---- recording loss ----
             if rate == 1:
-                loss_record5.update(loss5.data, opt.batchsize)
-        # ---- train visualization ----
+                loss_record5.update(loss.data, opt.batchsize)
+
+        # ---- training visualization ----
         if i % 20 == 0 or i == total_step:
             print('{} Epoch [{:03d}/{:03d}], Step [{:04d}/{:04d}], '
                   ' lateral-5: {:0.4f}]'.
                   format(datetime.now(), epoch, opt.epoch, i, total_step,
                           loss_record5.show()))
+
+
     save_path = 'snapshots/{}/'.format(opt.train_save)
     os.makedirs(save_path, exist_ok=True)
     
@@ -179,8 +179,6 @@ if __name__ == '__main__':
     # from utils.utils import CalParams
     # x = torch.randn(1, 3, 352, 352).cuda()
     # CalParams(lib, x)
-
-    params = model.parameters()
  
     image_root = '{}/images/'.format(opt.train_path)
     gt_root = '{}/masks/'.format(opt.train_path)
@@ -198,11 +196,10 @@ if __name__ == '__main__':
         optimizer = torch.optim.Adam(params, opt.lr)
     else:
         optimizer = torch.optim.SGD(params, opt.lr, weight_decay = 1e-4, momentum = 0.9)
-        # optimizer = torch.optim.SGD(params, opt.lr, momentum = 0.9)
 
     print(optimizer)
 
     best_dice = 0.0
     for epoch in range(1, opt.epoch):
-        # adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
+        adjust_lr(optimizer, opt.lr, epoch, 0.1, 200)
         best_dice = train(train_loader, model, optimizer, epoch, opt.test_path, best_dice)

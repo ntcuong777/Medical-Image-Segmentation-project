@@ -39,18 +39,13 @@ class HarDMSEG(nn.Module):
     def forward(self, x, get_segmentation_result=True):
         #print("input",x.size())
         
-        base_net_out = self.base_net(x)
+        [x0, x1, x2, x3, x4] = self.base_net(x)
+
+        x2 = self.rfb2_1(x2)        # channel -> 32
+        x3 = self.rfb3_1(x3)        # channel -> 32
+        x4 = self.rfb4_1(x4)        # channel -> 32
         
-        # _ = base_net_out[0]
-        x2 = base_net_out[-3]
-        x3 = base_net_out[-2]
-        x4 = base_net_out[-1]
-        
-        x2_rfb = self.rfb2_1(x2)        # channel -> 32
-        x3_rfb = self.rfb3_1(x3)        # channel -> 32
-        x4_rfb = self.rfb4_1(x4)        # channel -> 32
-        
-        out = self.agg1(x4_rfb, x3_rfb, x2_rfb)
+        out = self.agg1(x4, x3, x2)
 
         if get_segmentation_result:
             out = F.interpolate(out, scale_factor=8, mode='bilinear')    # NOTES: Sup-1 (bs, 1, 44, 44) -> (bs, 1, 352, 352)
@@ -58,4 +53,4 @@ class HarDMSEG(nn.Module):
         if get_segmentation_result:
             return out #, lateral_map_4, lateral_map_3, lateral_map_2
         else:
-            return out, base_net_out
+            return out, [x0, x1]

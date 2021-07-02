@@ -28,14 +28,9 @@ class MobileWnet(nn.Module):
 
 
     def forward(self, inputs, use_sigmoid=False):
-        first_net_out, first_net_enc = self.first_network(inputs, get_segmentation_result=False)
-        first_net_enc_1 = first_net_enc[0]
-        first_net_enc_2 = first_net_enc[1]
+        out, [first_net_enc_1, first_net_enc_2] = self.first_network(inputs, get_segmentation_result=False)
         
-        second_net_out = self.second_network(first_net_out)
-        x2 = second_net_out[0]
-        x3 = second_net_out[1]
-        x4 = second_net_out[2]
+        [x2, x3, x4] = self.second_network(out)
 
         out = self.upsample(x4)
         
