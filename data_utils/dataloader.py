@@ -59,12 +59,12 @@ class TrainDataset(data.Dataset):
     def rgb_loader(self, path):
         im_bgr = cv.imread(path)
         im_rgb = cv.cvtColor(im_bgr, cv.COLOR_BGR2RGB)
-        return im_rgb / 255.0
+        return (im_rgb / 255.0).astype(np.float32)
 
 
     def binary_loader(self, path):
         im_gt = cv.imread(path, cv.IMREAD_GRAYSCALE)
-        return im_gt / 255.0
+        return (im_gt / 255.0).astype(np.float32)
 
 
     def resize(self, img, gt):
@@ -126,12 +126,12 @@ class TestDataset:
     def rgb_loader(self, path):
         im_bgr = cv.imread(path)
         im_rgb = cv.cvtColor(im_bgr, cv.COLOR_BGR2RGB)
-        return im_rgb / 255.0
+        return (im_rgb / 255.0).astype(np.float32)
 
 
     def binary_loader(self, path):
         im_gt = cv.imread(path, cv.IMREAD_GRAYSCALE)
-        return im_gt / 255.0
+        return (im_gt / 255.0).astype(np.float32)
 
 
     def __len__(self):
