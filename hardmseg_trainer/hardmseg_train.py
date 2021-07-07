@@ -148,5 +148,5 @@ def train(config: TrainConfig):
 
     best_dice = 0.0
     for epoch in range(1, config.epochs):
-        adjust_lr(optimizer, config.lr, epoch, config.decay_rate, config.decay_epoch)
+        adjust_lr(optimizer, config.learning_rate, epoch, config.decay_rate, config.decay_epoch)
         best_dice = train_loop(config, train_loader, model, optimizer, epoch, best_dice, total_step)
