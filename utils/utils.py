@@ -1,9 +1,8 @@
+from __future__ import print_function
 import torch
 import numpy as np
 from thop import profile
 from thop import clever_format
-
-from __future__ import print_function
 import sys
 
 def print_warning(*args, **kwargs):
