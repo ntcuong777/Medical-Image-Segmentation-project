@@ -63,6 +63,8 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
             optimizer.zero_grad()
             # ---- data prepare ----
             images, gts = pack
+            print(images.dtype)
+
             images = Variable(images).cuda()
             gts = Variable(gts).cuda()
             # ---- rescale ----
