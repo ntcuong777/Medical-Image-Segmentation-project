@@ -37,7 +37,7 @@ class TrainDataset(data.Dataset):
         
         seed = np.random.randint(2147483647) # make a seed with numpy generator 
         random.seed(seed) # apply this seed to img tranfsorms
-        image, gt = self.data_transformer()
+        image, gt = self.data_transformer(image, gt)
 
         return image, gt
 
