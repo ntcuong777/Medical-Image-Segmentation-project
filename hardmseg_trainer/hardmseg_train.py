@@ -118,7 +118,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
 def train(config: TrainConfig):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = SegmenterFactory.create_segmenter_as(segmenter='MobileWnet')
+    model = SegmenterFactory.create_segmenter_as(segmenter='HarDMSEG')
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         model = nn.DataParallel(model)

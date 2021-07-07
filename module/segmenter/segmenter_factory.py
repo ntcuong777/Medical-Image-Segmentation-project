@@ -19,8 +19,8 @@ class SegmenterFactory:
             return SegmenterFactory.create_medt_model(img_size=img_size, imgchan=imgchan)
 
 
-    def create_hardmseg_model(activation='hard_swish'):
-        return HarDMSEG(activation=activation)
+    def create_hardmseg_model(activation='relu'):
+        return HarDMSEG(activation=activation, channel=64)
 
     # def create_mobilewnet_model(activation='hard_swish'):
     #     return MobileWnet(activation=activation)
