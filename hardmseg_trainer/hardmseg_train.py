@@ -66,7 +66,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
             images = Variable(images).cuda()
             gts = Variable(gts).cuda()
             # ---- rescale ----
-            trainsize = int(round(config.trainsize*rate/32)*32)
+            trainsize = int(round(config.input_dim[0]*rate/32)*32)
             if rate != 1:
                 images = F.interpolate(images, size=(trainsize, trainsize), mode='bilinear')
                 gts = F.interpolate(gts, size=(trainsize, trainsize), mode='bilinear')
