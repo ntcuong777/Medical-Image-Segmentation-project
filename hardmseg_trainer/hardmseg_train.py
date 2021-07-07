@@ -140,9 +140,9 @@ def train(config: TrainConfig):
 
     params = model.parameters()
     if config.optimizer == 'Adam':
-        optimizer = torch.optim.Adam(params, config.lr)
+        optimizer = torch.optim.Adam(params, config.learning_rate)
     else:
-        optimizer = torch.optim.SGD(params, config.lr, weight_decay = 1e-4, momentum = 0.9)
+        optimizer = torch.optim.SGD(params, config.learning_rate, weight_decay = 1e-4, momentum = 0.9)
 
     print(optimizer)
 
