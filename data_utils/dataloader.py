@@ -35,8 +35,8 @@ class TrainDataset(data.Dataset):
         image = self.rgb_loader(self.images[index])
         gt = self.binary_loader(self.gts[index])
         gt = cv.cvtColor(gt, cv.COLOR_BGR2GRAY)
-        image /= 255.0
-        gt /= 255.0
+        image = (image / 255.0).astype(np.float32)
+        gt = (gt / 255.0).astype(np.float32)
         gt = np.expand_dims(gt, axis=2)
         
         seed = np.random.randint(2147483647) # make a seed with numpy generator 
@@ -119,8 +119,8 @@ class TestDataset:
         image = self.rgb_loader(self.images[index])
         gt = self.binary_loader(self.gts[index])
         gt = cv.cvtColor(gt, cv.COLOR_BGR2GRAY)
-        image /= 255.0
-        gt /= 255.0
+        image = (image / 255.0).astype(np.float32)
+        gt = (gt / 255.0).astype(np.float32)
         gt = np.expand_dims(gt, axis=2)
 
         image, gt = self.data_transformer(image, gt)
