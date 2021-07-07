@@ -114,6 +114,10 @@ class TestDataset:
         image = self.rgb_loader(self.images[index])
         gt = self.binary_loader(self.gts[index])
         image, gt = self.data_transformer(image, gt)
+        gt = cv.cvtColor(gt, cv.COLOR_BGR2GRAY)
+        image /= 255.0
+        gt /= 255.0
+        gt = np.expand_dims(gt, axis=2)
 
         # name = self.images[self.index].split('/')[-1]
         # if name.endswith('.jpg'):
@@ -126,12 +130,12 @@ class TestDataset:
     def rgb_loader(self, path):
         im_bgr = cv.imread(path)
         im_rgb = cv.cvtColor(im_bgr, cv.COLOR_BGR2RGB)
-        return (im_rgb / 255.0).astype(np.float32)
+        return im_rgb
 
 
     def binary_loader(self, path):
-        im_gt = cv.imread(path, cv.IMREAD_GRAYSCALE)
-        return (im_gt / 255.0).astype(np.float32)
+        im_gt = cv.imread(path)
+        return im_gt
 
 
     def __len__(self):
