@@ -34,14 +34,15 @@ class TrainDataset(data.Dataset):
     def __getitem__(self, index):
         image = self.rgb_loader(self.images[index])
         gt = self.binary_loader(self.gts[index])
-        
-        seed = np.random.randint(2147483647) # make a seed with numpy generator 
-        random.seed(seed) # apply this seed to img tranfsorms
-        image, gt = self.data_transformer(image, gt)
         gt = cv.cvtColor(gt, cv.COLOR_BGR2GRAY)
         image /= 255.0
         gt /= 255.0
         gt = np.expand_dims(gt, axis=2)
+        
+        seed = np.random.randint(2147483647) # make a seed with numpy generator 
+        random.seed(seed) # apply this seed to img tranfsorms
+        image, gt = self.data_transformer(image, gt)
+
 
         return image, gt
 
@@ -117,11 +118,12 @@ class TestDataset:
     def __getitem__(self, index):
         image = self.rgb_loader(self.images[index])
         gt = self.binary_loader(self.gts[index])
-        image, gt = self.data_transformer(image, gt)
         gt = cv.cvtColor(gt, cv.COLOR_BGR2GRAY)
         image /= 255.0
         gt /= 255.0
         gt = np.expand_dims(gt, axis=2)
+
+        image, gt = self.data_transformer(image, gt)
 
         # name = self.images[self.index].split('/')[-1]
         # if name.endswith('.jpg'):
