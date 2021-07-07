@@ -11,5 +11,6 @@ scipy
 h5py
 scikit-learn==0.23.2
 opencv-python
-albumentations
+albumentations>=1.0.1
 thop
+torchinfo

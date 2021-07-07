@@ -150,7 +150,7 @@ class HarDNet(nn.Module):
         self.__load_pretrained__(model_variant=model_variant)
 
         # Delete last classification layer
-        self.base = nn.ModuleList([self.base[i] for i in range(self.base - 1)])
+        self.base = nn.ModuleList(*[self.base[i] for i in range(self.base - 1)])
 
         # Get the indices at the end of each the encoder block
         # (encoder block is a series of layer that have the same output size)
