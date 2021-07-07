@@ -10,7 +10,6 @@ class TrainAugmentation:
                                            A.SomeOf([A.HorizontalFlip(),
                                                      A.VerticalFlip(),
                                                      A.RandomBrightnessContrast(),
-                                                     A.RandomCrop(),
                                                      A.ChannelDropout(),
                                                      A.CoarseDropout(min_holes=1, min_height=3, min_width=3),
                                                      A.GridDistortion(),
