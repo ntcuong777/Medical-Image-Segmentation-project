@@ -3,6 +3,12 @@ import numpy as np
 from thop import profile
 from thop import clever_format
 
+from __future__ import print_function
+import sys
+
+def print_warning(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 
 def autopad(k, p=None):
     if p is None:

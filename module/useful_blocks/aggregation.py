@@ -5,7 +5,7 @@ from .basic_conv2d import BasicConv2d
 class Aggregation(nn.Module):
     # dense aggregation, it can be replaced by other aggregation previous, such as DSS, amulet, and so on.
     # used after MSF
-    def __init__(self, channel, w_net_style=False):
+    def __init__(self, channel):
         super(Aggregation, self).__init__()
         self.relu = nn.ReLU(True)
 
@@ -20,8 +20,7 @@ class Aggregation(nn.Module):
         self.conv_concat3 = BasicConv2d(3*channel, 3*channel, 3, padding=1)
         self.conv4 = BasicConv2d(3*channel, 3*channel, 3, padding=1)
 
-        last_layer_out_channels = 40 if w_net_style else 1
-        self.conv5 = nn.Conv2d(3*channel, last_layer_out_channels, 1)
+        self.conv5 = nn.Conv2d(3*channel, 1, 1)
 
     def forward(self, x1, x2, x3):
         x1_1 = x1

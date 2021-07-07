@@ -3,7 +3,7 @@ from module.activations.mish.mish import Mish
 from .dw_conv import DWSepConvBlock
 
 class BasicConv2d(nn.Module):
-    def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, activation=None, dilation=1, depth_wise=True):
+    def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, activation='relu', dilation=1, depth_wise=False):
         super(BasicConv2d, self).__init__()
         
         if not depth_wise:

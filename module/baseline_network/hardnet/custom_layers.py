@@ -1,5 +1,5 @@
 import torch.nn as nn
-from module.activations.mish.mish import Mish
+from module.activations.mish import Mish
 
 class Flatten(nn.Module):
     def __init__(self):

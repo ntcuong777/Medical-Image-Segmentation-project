@@ -3,16 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import os, argparse
-from module.segmenter.HarDMSEG import HarDMSEG
-from utils.dataloader import test_dataset
+from module.segmenter import SegmenterFactory
+from data_utils.dataloader import test_dataset
 from PIL import Image
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--testsize', type=int, default=352, help='testing size')
 parser.add_argument('--pth_path', type=str, default='HarDMSEG-best.pth')
-parser.add_argument('--model', type=str, default='HarDNet68ds')
-parser.add_argument('--use_attention', type=str, default=False)
-parser.add_argument('--activation', type=str, default='relu', help='`relu` or `mish`')
+parser.add_argument('--model', type=str, default='HarDNet68')
 for _data_name in ['Kvasir']:
 #for _data_name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
     
@@ -22,7 +20,7 @@ for _data_name in ['Kvasir']:
     
     save_path = './results/Moded-HarDMSEG/{}/'.format(_data_name)
     opt = parser.parse_args()
-    model = HarDMSEG(model_variant=opt.model, activation=opt.activation, use_attention=opt.use_attention)
+    model = SegmenterFactory.create_segmenter_as(segmenter='HarDMSEG')
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs

@@ -30,11 +30,11 @@ def data_split(src_list):
     return counter_list
 
 
-if __name__ == '__main__':
-    src_dir = '../Dataset/train_dataset/CVC-EndoSceneStill/CVC-612/test_split/masks_tif'
-    dst_dir = '../Dataset/train_dataset/CVC-EndoSceneStill/CVC-612/test_split/masks'
+# if __name__ == '__main__':
+#     src_dir = '../Dataset/train_dataset/CVC-EndoSceneStill/CVC-612/test_split/masks_tif'
+#     dst_dir = '../Dataset/train_dataset/CVC-EndoSceneStill/CVC-612/test_split/masks'
 
-    os.makedirs(dst_dir, exist_ok=True)
-    for img_name in os.listdir(src_dir):
-        tif2png(os.path.join(src_dir, img_name),
-                os.path.join(dst_dir, img_name.replace('.tif', '.png')))
+#     os.makedirs(dst_dir, exist_ok=True)
+#     for img_name in os.listdir(src_dir):
+#         tif2png(os.path.join(src_dir, img_name),
+#                 os.path.join(dst_dir, img_name.replace('.tif', '.png')))

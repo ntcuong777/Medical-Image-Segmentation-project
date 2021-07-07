@@ -152,5 +152,5 @@ class FocalTverskyLoss(nn.Module):
         
         Tversky = (TP + smooth) / (TP + alpha*FN + (1-alpha)*FP + smooth)  
         FocalTversky = (1 - Tversky)**gamma
-                       
+
         return FocalTversky

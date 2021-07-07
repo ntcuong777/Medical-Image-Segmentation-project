@@ -1,0 +1,30 @@
+# Note that the relative path here are relative to the folder where you run the trainer
+data: # Inside each path there are two folders: `images` and `masks` containing inputs and labels
+  train_path: './data/train/'
+  test_path: './data/test/'
+train:
+  num_workers: 8
+  model: 'DoubleNet' # Either `HarDMSEG`, `MedT`, or `DoubleNet` which combines both HarDMSEG and MedT
+  augmentation: True # Apply augmentation on the fly or not
+  batch_size: 8
+  shuffle: True
+  input_dim: [512, 512]
+  num_channels: 3
+  epochs: 400
+  optimizer: 'SGD'
+  learning_rate: 0.01
+  clip: 0.5
+  decay_rate: 0.1
+  decay_epoch: 50
+  weight_decay: 0.00001
+  betas: [0.9, 0.999]
+  T_max: 30
+  eta_min: 0.00001
+  random_state: 316
+  save_model_path: 'snapshots/'
+  model_name: 'MedSeg'
+  save_freq: 10 # save last weights once every 10 epochs
+  resume: False
+  resume_model_path: 'snapshots/MedSeg-best.pt'
+logging:
+  level: INFO

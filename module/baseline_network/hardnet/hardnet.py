@@ -41,7 +41,7 @@ class HarDNet(nn.Module):
             self.arch = 85
 
         self.har_d_block_indices = []
-        self.encoder_block_end_indices = [] # save the indices of the layer which has the last output
+        encoder_block_end_indices = [] # save the indices of the layer which has the last output
                                             # of each encoder block before the downsampling layer next to it
 
         ######## CONFIGURATION PARAMETERS OF DIFFERENT VARIANTS ########
@@ -87,7 +87,7 @@ class HarDNet(nn.Module):
         # Second Encoder block
         self.base.append(ConvLayer(first_ch[0], first_ch[1], kernel=second_kernel, activation=activation))
         count_layers += 1 # one layer added
-        self.encoder_block_end_indices.append(count_layers - 1)
+        encoder_block_end_indices.append(count_layers - 1)
 
         # Maxpooling or DWConv3x3 downsampling
         if max_pool:
@@ -114,7 +114,7 @@ class HarDNet(nn.Module):
 
             ch = ch_list[i]
             if downSamp[i] == 1:
-                self.encoder_block_end_indices.append(count_layers - 1)
+                encoder_block_end_indices.append(count_layers - 1)
 
                 if max_pool:
                     self.base.append(nn.MaxPool2d(kernel_size=2, stride=2))
@@ -137,7 +137,7 @@ class HarDNet(nn.Module):
         # That module needs the output of the 3 previous encoder blocks so I have the save the
         # indices where an encoder block ends so that I can save its output & return it to the
         # main pipeline which uses Cascade Partial Decoder.
-        self.encoder_block_end_indices.append(count_layers - 1)
+        encoder_block_end_indices.append(count_layers - 1)
         
         ch = ch_list[blks-1]
         self.base.append (
@@ -148,6 +148,13 @@ class HarDNet(nn.Module):
                 nn.Linear(ch, 1000) ))
         
         self.__load_pretrained__(model_variant=model_variant)
+
+        # Delete last classification layer
+        self.base = nn.ModuleList([self.base[i] for i in range(self.base - 1)])
+
+        # Get the indices at the end of each the encoder block
+        # (encoder block is a series of layer that have the same output size)
+        self.last_3_enc = encoder_block_end_indices[len(encoder_block_end_indices)-3:len(encoder_block_end_indices)]
 
     
     def __load_pretrained__(self, model_variant):
@@ -164,13 +171,14 @@ class HarDNet(nn.Module):
 
 
     def forward(self, x):
-        out_branch =[]
-        for i in range(len(self.base)-1):
+        out_branch = []
+
+        for i in range(len(self.base)):
             x = self.base[i](x)
 
             # HarDMSEG need the output of the last 3 encoder blocks for further processing
             # I need all encoder blocks to append attention layer
-            if i in self.encoder_block_end_indices:
+            if i in self.last_3_enc:
                 out_branch.append(x)
 
         return out_branch
