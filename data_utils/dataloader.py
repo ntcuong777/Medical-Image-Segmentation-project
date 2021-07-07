@@ -38,6 +38,10 @@ class TrainDataset(data.Dataset):
         seed = np.random.randint(2147483647) # make a seed with numpy generator 
         random.seed(seed) # apply this seed to img tranfsorms
         image, gt = self.data_transformer(image, gt)
+        gt = cv.cvtColor(gt, cv.COLOR_BGR2GRAY)
+        image /= 255.0
+        gt /= 255.0
+        gt = np.expand_dims(gt, axis=2)
 
         return image, gt
 
