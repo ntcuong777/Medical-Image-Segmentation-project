@@ -24,20 +24,21 @@ def test(model):
     count_imgs = 0
     for i, (image, gt) in enumerate(test_loader, start=1):
         image = image.cuda()
-        gt /= (gt.max() + 1e-8)
+        gt = gt.data.numpy()
 
         res  = model(image, use_sigmoid=True)
         res = F.interpolate(res, size=gt.shape[2], mode='bilinear')
         res = res.data.cpu().numpy()
-        res = (res - res.min()) / (res.max() - res.min() + 1e-8)
-
-        input = res
-        target = gt.data.numpy()
-        smooth = 1
 
         for j in range(gt.shape[0]):
-            intersection = (input[j]*target[j])
-            loss = (2 * intersection.sum() + smooth) / (input[j].sum() + target[j].sum() + smooth)
+            out = res[j]
+            out = (out - out.min()) / (out.max() - out.min() + 1e-8)
+            target = gt[j] * 255.0
+            target /= (target.max() + 1e-8)
+            smooth = 1
+
+            intersection = (out*target)
+            loss = (2 * intersection.sum() + smooth) / (out.sum() + target.sum() + smooth)
 
             count_imgs += 1
             a = float('{:.4f}'.format(loss))
