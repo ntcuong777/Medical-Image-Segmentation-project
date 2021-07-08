@@ -49,7 +49,8 @@ if __name__ == "__main__":
         data_path = '../data/test/{}'.format(_data_name)
 
         save_path = './results/DoubleNet/{}/'.format(_data_name)
-        model = SegmenterFactory.create_segmenter_as('UACANet')
+        model = SegmenterFactory.create_segmenter_as('HarDMSEG')
+        model.load_state_dict(torch.load('snapshots/HarDMSEG/best.pth'))
         model.cuda()
         model.eval()
 
