@@ -9,11 +9,11 @@ class TrainConfig(object):
     test_path: str
 
     num_workers: int
-    model: str
+    model_name: str
     augmentation: bool
     batch_size: int
     shuffle: bool
-    input_dim: Tuple[int, int]
+    input_dim: int
     num_channels: int
     epochs: int
     optimizer: str
@@ -27,7 +27,6 @@ class TrainConfig(object):
     eta_min: float
     random_state: int
     save_model_path: Optional[str]
-    model_name: str
     save_freq: int
     resume: bool
     resume_model_path: str

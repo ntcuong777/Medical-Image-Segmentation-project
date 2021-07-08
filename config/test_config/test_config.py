@@ -7,11 +7,8 @@ import yaml
 class TestConfig(object):
     test_path: str
 
-    test_stage: int
-    stage_1_net: str
-    stage_2_net: str
     batch_size: int
-    input_dim: Tuple[int, int]
+    input_dim: int
     num_channels: int
     pretrained_path: str
 

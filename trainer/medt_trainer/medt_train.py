@@ -8,14 +8,14 @@ from torch.autograd import Variable
 import numpy as np
 from metrics import LogNLLLoss
 from module.segmenter.medical_transformer import medt
-from configs import TrainConfig, TestConfig
+from config import TrainConfig, TestConfig
 from utils.losses import StructureLoss, DiceBCELoss, DiceFocalLoss, FocalTverskyLoss
 from data_utils.dataloader import get_train_loader, get_test_loader
 
 def test(model):
     model.eval()
 
-    config = TestConfig.load_config_class('configs/test_configs/test_config.yaml')
+    config = TestConfig.load_config_class('config/test_config/test_config.yaml')
 
     test_loader = get_test_loader(config)
     b = 0.0
@@ -46,19 +46,17 @@ def test(model):
     return b/100
 
 
-def train(config: TrainConfig, model_name='MedT'):    
-    assert config.input_dim[0] != config.input_dim[1], "Image must be square-shaped..."
-
+def train_medt(config: TrainConfig, model_name='MedT'):    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if model_name == "axialunet":
-        model = medt.axialunet(img_size = config.input_dim[0], imgchan = config.num_channels)
+        model = medt.axialunet(img_size = config.input_dim, imgchan = config.num_channels)
     elif model_name == "MedT":
-        model = medt.axialnet.MedT(img_size = config.input_dim[0], imgchan = config.num_channels)
+        model = medt.axialnet.MedT(img_size = config.input_dim, imgchan = config.num_channels)
     elif model_name == "gatedaxialunet":
-        model = medt.axialnet.gated(img_size = config.input_dim[0], imgchan = config.num_channels)
+        model = medt.axialnet.gated(img_size = config.input_dim, imgchan = config.num_channels)
     elif model_name == "logo":
-        model = medt.axialnet.logo(img_size = config.input_dim[0], imgchan = config.num_channels)
+        model = medt.axialnet.logo(img_size = config.input_dim, imgchan = config.num_channels)
 
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")

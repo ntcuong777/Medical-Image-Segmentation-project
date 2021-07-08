@@ -5,7 +5,7 @@ import numpy as np
 import random
 from utils import print_warning
 from .augmentation import TrainAugmentation, TestAugmentation
-from configs import TrainConfig, TestConfig
+from config import TrainConfig, TestConfig
 
 class TrainDataset(data.Dataset):
     """
@@ -75,9 +75,9 @@ class TrainDataset(data.Dataset):
     def resize(self, img, gt):
         assert img.size == gt.size
         w, h = img.size
-        if h < self.im_size[0] or w < self.im_size[1]:
-            h = max(h, self.im_size[0])
-            w = max(w, self.im_size[1])
+        if h < self.im_size or w < self.im_size:
+            h = max(h, self.im_size)
+            w = max(w, self.im_size)
             return cv.resize(img, (w, h), interpolation=cv.INTER_LINEAR), cv.resize(gt, (w, h), interpolation=cv.INTER_NEAREST)
         else:
             return img, gt

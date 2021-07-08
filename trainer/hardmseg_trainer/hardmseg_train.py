@@ -1,4 +1,3 @@
-from configs.test_configs.test_config import TestConfig
 from numpy.core.fromnumeric import mean
 import torch
 from torch.autograd import Variable
@@ -13,12 +12,12 @@ from torchinfo import summary
 import torch.nn as nn
 from utils.losses import StructureLoss, FocalTverskyLoss, DiceFocalLoss, DiceBCELoss
 from module.segmenter import SegmenterFactory
-from configs import TrainConfig
+from config import TrainConfig, TestConfig
 
 def test(model):
     model.eval()
 
-    config = TestConfig.load_config_class('configs/test_configs/test_config.yaml')
+    config = TestConfig.load_config_class('config/test_config/test_config.yaml')
 
     test_loader = get_test_loader(config)
     b = 0.0
@@ -63,12 +62,10 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
             optimizer.zero_grad()
             # ---- data prepare ----
             images, gts = pack
-            print(gts.shape)
-
             images = Variable(images).cuda()
             gts = Variable(gts).cuda()
             # ---- rescale ----
-            trainsize = int(round(config.input_dim[0]*rate/32)*32)
+            trainsize = int(round(config.input_dim*rate/32)*32)
             if rate != 1:
                 images = F.interpolate(images, size=(trainsize, trainsize), mode='bilinear')
                 gts = F.interpolate(gts, size=(trainsize, trainsize), mode='bilinear')
@@ -117,7 +114,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
     return best # return best meandice for save the best later
 
 
-def train(config: TrainConfig):
+def train_hardmseg(config: TrainConfig):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = SegmenterFactory.create_segmenter_as(segmenter='HarDMSEG')

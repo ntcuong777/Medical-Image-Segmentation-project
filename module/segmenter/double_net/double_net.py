@@ -1,15 +1,17 @@
-from configs.train_configs.train_config import TrainConfig
+from config import TrainConfig
 import torch
 import torch.nn as nn
 from module.segmenter.hardmseg import HarDMSEG
 from module.segmenter.medical_transformer import MedT
 
 class DoubleNet(nn.Module):
-    def __init__(self, img_size=512, img_channels=3):
+    def __init__(self, img_size=512, img_channels=3, pretrained_hardmseg=None):
         super(DoubleNet, self).__init__()
 
         # Try to use 64 channels for RFB module to see if it will improve
-        self.first_network = HarDMSEG(activation='relu', channel=64)
+        self.first_network = HarDMSEG(activation='relu')
+        if pretrained_hardmseg is not None:
+            self.first_network.load_state_dict(torch.load(pretrained_hardmseg))
 
         # Input is concatenated with the segmentation mask depthwise. Thus, imgchan = img_channels + 1
         self.second_network = MedT(img_size=img_size, imgchan=img_channels+1)
