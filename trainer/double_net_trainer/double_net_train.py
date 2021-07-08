@@ -19,31 +19,29 @@ def test(model):
 
     test_loader = get_test_loader(config)
     b = 0.0
+    count_imgs = 0
     for i, (image, gt) in enumerate(test_loader, start=1):
-        gt = np.asarray(gt, np.float32)
-        gt /= (gt.max() + 1e-8)
         image = image.cuda()
-        
-        res  = model(image)
-        res = F.interpolate(res, size=gt.shape, mode='bilinear')
-        res = res.sigmoid().data.cpu().numpy().squeeze()
-        res = (res - res.min()) / (res.max() - res.min() + 1e-8)
-        
-        input = res
-        target = np.array(gt)
-        smooth = 1
-        input_flat = np.reshape(input,(-1))
-        target_flat = np.reshape(target,(-1))
+        gt = gt.data.numpy()
 
-        intersection = (input_flat*target_flat)
+        res  = model(image, use_sigmoid=True)
+        res = res.data.cpu().numpy()
 
-        loss =  (2 * intersection.sum() + smooth) / (input.sum() + target.sum() + smooth)
+        for j in range(gt.shape[0]):
+            out = res[j]
+            out = (out - out.min()) / (out.max() - out.min() + 1e-8)
+            target = gt[j] * 255.0
+            target /= (target.max() + 1e-8)
+            smooth = 1
 
-        a =  '{:.4f}'.format(loss)
-        a = float(a)
-        b = b + a
+            intersection = (out*target)
+            loss = (2 * intersection.sum() + smooth) / (out.sum() + target.sum() + smooth)
 
-    return b/100
+            count_imgs += 1
+            a = float('{:.4f}'.format(loss))
+            b = b + a
+
+    return b / count_imgs
 
 
 def train_double_net(config: TrainConfig):    

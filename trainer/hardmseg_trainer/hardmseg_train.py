@@ -27,7 +27,6 @@ def test(model):
         gt = gt.data.numpy()
 
         res  = model(image, use_sigmoid=True)
-        res = F.interpolate(res, size=gt.shape[2], mode='bilinear')
         res = res.data.cpu().numpy()
 
         for j in range(gt.shape[0]):
@@ -116,7 +115,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
 def train_hardmseg(config: TrainConfig):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = SegmenterFactory.create_segmenter_as(segmenter='HarDMSEG')
+    model = SegmenterFactory.create_segmenter_as(segmenter='HarDMSEG', hardnet_channel=64)
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         model = nn.DataParallel(model)
@@ -124,9 +123,6 @@ def train_hardmseg(config: TrainConfig):
     if config.resume:
         model.load_state_dict(torch.load(config.resume_model_path))
     model.to(device)
- 
-    image_root = '{}/images/'.format(config.train_path)
-    gt_root = '{}/masks/'.format(config.train_path)
 
     train_loader = get_train_loader(config)
     total_step = len(train_loader)
