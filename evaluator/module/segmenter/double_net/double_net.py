@@ -17,7 +17,7 @@ class DoubleNet(nn.Module):
     def __init__(self, pretrained_hardmseg='snapshots/HarDMSEG/best.pth'):
         super(DoubleNet, self).__init__()
 
-        assert pretrained_hardmseg is None, 'Must provide HarDMSEG weights to DoubleNet'
+        assert pretrained_hardmseg is not None, 'Must provide HarDMSEG weights to DoubleNet'
 
         self.first_network = HarDMSEG()
         self.first_network.load_state_dict(torch.load(pretrained_hardmseg))
