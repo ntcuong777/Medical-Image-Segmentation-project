@@ -21,8 +21,10 @@ def test(model):
 
     test_loader = get_test_loader(config)
     b = 0.0
+    count_imgs = 0
     for i, (image, gt) in enumerate(test_loader, start=1):
         image = image.cuda()
+        gt /= (gt.max() + 1e-8)
 
         res  = model(image, use_sigmoid=True)
         res = F.interpolate(res, size=gt.shape[2], mode='bilinear')
@@ -33,14 +35,15 @@ def test(model):
         target = gt.data.numpy()
         smooth = 1
 
-        intersection = (input*target)
+        for j in range(gt.shape[0]):
+            intersection = (input[j]*target[j])
+            loss = (2 * intersection.sum() + smooth) / (input[j].sum() + target[j].sum() + smooth)
 
-        loss = (2 * intersection.sum() + smooth) / (input.sum() + target.sum() + smooth)
+            count_imgs += 1
+            a = float('{:.4f}'.format(loss))
+            b = b + a
 
-        a = float('{:.4f}'.format(loss))
-        b = b + a
-
-    return b/100
+    return b / count_imgs
 
 
 def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_dice, total_step):
