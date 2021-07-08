@@ -166,6 +166,7 @@ class HarDNet(nn.Module):
         
         blks = len(n_layers)
         self.base = nn.ModuleList([])
+        self.encoder_block_end_indices = []
 
         count_layers = 0
         # First Layer: Standard Conv3x3, Stride=2
