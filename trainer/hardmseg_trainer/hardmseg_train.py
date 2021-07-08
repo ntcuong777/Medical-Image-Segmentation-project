@@ -22,7 +22,6 @@ def test(model):
     test_loader = get_test_loader(config)
     b = 0.0
     for i, (image, gt) in enumerate(test_loader, start=1):
-        gt /= (gt.max() + 1e-8)
         image = image.cuda()
 
         res  = model(image, use_sigmoid=True)
@@ -36,10 +35,9 @@ def test(model):
 
         intersection = (input*target)
 
-        loss =  (2 * intersection.sum() + smooth) / (input.sum() + target.sum() + smooth)
+        loss = (2 * intersection.sum() + smooth) / (input.sum() + target.sum() + smooth)
 
-        a =  '{:.4f}'.format(loss)
-        a = float(a)
+        a = float('{:.4f}'.format(loss))
         b = b + a
 
     return b/100
