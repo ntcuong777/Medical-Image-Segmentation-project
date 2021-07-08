@@ -137,7 +137,7 @@ class HarDMSEG(nn.Module):
         self.conv5 = BasicConv2d(1024, 1024, 3, padding=1)
         self.conv6 = nn.Conv2d(1024, 1, 1)
         self.upsample = nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True)
-        self.hardnet = hardnet(arch=68)
+        self.hardnet = hardnet(arch=68, pretrained=False)
         
     def forward(self, x, use_sigmoid=True):        
         hardnetout = self.hardnet(x)
@@ -175,6 +175,7 @@ class HarDMSEG(nn.Module):
             just in case we are allowed to use the author's pretrained weights for
             the contest or something :)
         """
+        del self.hardnet.delete_classification_head()
         del self.ra4_conv1, self.ra4_conv2, self.ra4_conv3, self.ra4_conv4, self.ra4_conv5
         del self.ra3_conv1, self.ra3_conv2, self.ra3_conv3, self.ra3_conv4
         del self.ra2_conv1, self.ra2_conv2, self.ra2_conv3, self.ra2_conv4, self.conv2
