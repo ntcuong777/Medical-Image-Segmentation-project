@@ -6,7 +6,6 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 import numpy as np
-from metrics import LogNLLLoss
 from module.segmenter.medical_transformer import medt
 from config import TrainConfig, TestConfig
 from utils.losses import StructureLoss, DiceBCELoss, DiceFocalLoss, FocalTverskyLoss
