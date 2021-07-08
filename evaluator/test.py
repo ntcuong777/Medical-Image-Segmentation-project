@@ -46,7 +46,7 @@ if __name__ == "__main__":
     testsize = 352
 
     for _data_name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
-        data_path = '../data/test'
+        data_path = '../data/test/{}'.format(_data_name)
 
         save_path = './results/DoubleNet/{}/'.format(_data_name)
         model = SegmenterFactory.create_segmenter_as('DoubleNet')
