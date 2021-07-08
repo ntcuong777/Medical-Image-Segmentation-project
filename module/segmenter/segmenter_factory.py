@@ -18,8 +18,8 @@ class SegmenterFactory:
             return SegmenterFactory.create_double_net_model(**kwargs)
 
 
-    def create_hardmseg_model(model_variant='HarDNet68', activation='relu', channel=32):
-        return HarDMSEG(activation=activation, channel=channel)
+    def create_hardmseg_model(model_variant='HarDNet68', activation='relu', hardnet_channel=32):
+        return HarDMSEG(activation=activation, channel=hardnet_channel)
 
     # def create_mobilewnet_model(activation='hard_swish'):
     #     return MobileWnet(activation=activation)
