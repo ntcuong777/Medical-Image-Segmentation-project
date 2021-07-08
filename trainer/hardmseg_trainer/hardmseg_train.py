@@ -24,12 +24,12 @@ def test(model):
     for i, (image, gt) in enumerate(test_loader, start=1):
         gt /= (gt.max() + 1e-8)
         image = image.cuda()
-        
+
         res  = model(image, use_sigmoid=True)
         res = F.interpolate(res, size=gt.shape[2], mode='bilinear')
         res = res.data.cpu().numpy()
         res = (res - res.min()) / (res.max() - res.min() + 1e-8)
-        
+
         input = res
         target = gt.data.numpy()
         smooth = 1
@@ -49,7 +49,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
     model.train()
 
     # ---- the loss to use ----
-    loss_fn = DiceBCELoss()
+    loss_fn = DiceFocalLoss() #DiceBCELoss()
 
     # ---- multi-scale training ----
     size_rates = [0.75, 1, 1.25]

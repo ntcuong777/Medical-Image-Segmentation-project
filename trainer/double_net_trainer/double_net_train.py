@@ -10,6 +10,7 @@ from module.segmenter.medical_transformer import medt
 from config import TrainConfig, TestConfig
 from utils.losses import StructureLoss, DiceBCELoss, DiceFocalLoss, FocalTverskyLoss
 from data_utils.dataloader import get_train_loader, get_test_loader
+from module.segmenter import SegmenterFactory
 
 def test(model):
     model.eval()
@@ -45,24 +46,26 @@ def test(model):
     return b/100
 
 
-def train_medt(config: TrainConfig, model_name='MedT'):    
+def train_double_net(config: TrainConfig):    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if model_name == "axialunet":
-        model = medt.axialunet(img_size = config.input_dim, imgchan = config.num_channels)
-    elif model_name == "MedT":
-        model = medt.axialnet.MedT(img_size = config.input_dim, imgchan = config.num_channels)
-    elif model_name == "gatedaxialunet":
-        model = medt.axialnet.gated(img_size = config.input_dim, imgchan = config.num_channels)
-    elif model_name == "logo":
-        model = medt.axialnet.logo(img_size = config.input_dim, imgchan = config.num_channels)
+    # if model_name == "axialunet":
+    #     model = medt.axialunet(img_size = config.input_dim, imgchan = config.num_channels)
+    # elif model_name == "MedT":
+    #     model = medt.axialnet.MedT(img_size = config.input_dim, imgchan = config.num_channels)
+    # elif model_name == "gatedaxialunet":
+    #     model = medt.axialnet.gated(img_size = config.input_dim, imgchan = config.num_channels)
+    # elif model_name == "logo":
+    #     model = medt.axialnet.logo(img_size = config.input_dim, imgchan = config.num_channels)
+
+    model = SegmenterFactory.create_segmenter_as(segmenter='DoubleNet')
 
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         model = nn.DataParallel(model)
     model.to(device)
 
-    criterion = DiceBCELoss() # LogNLLLoss()
+    criterion = DiceBCELoss()
     optimizer = torch.optim.Adam(list(model.parameters()), lr=config.learning_rate, weight_decay=1e-5)
 
 
@@ -99,8 +102,7 @@ def train_medt(config: TrainConfig, model_name='MedT'):
         print('epoch [{}/{}], loss:{:.4f}'.format(epoch, config.epochs, epoch_running_loss/(batch_idx+1)))
         
         if epoch == 10:
-            for param in model.parameters():
-                param.requires_grad = True
+            model.set_requires_grad_medt(True)
 
         # Test & save best every epoch
         meandice = test(model)

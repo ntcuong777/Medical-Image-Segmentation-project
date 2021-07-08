@@ -1,6 +1,5 @@
 from .hardmseg.HarDMSEG import HarDMSEG
-# from .mobile_w_net.mobile_w_net import MobileWnet
-from .medical_transformer.medt import MedT
+from .double_net import DoubleNet
 
 # Factory design pattern
 class SegmenterFactory:
@@ -10,20 +9,20 @@ class SegmenterFactory:
     """
 
     @staticmethod
-    def create_segmenter_as(segmenter='HarDMSEG', img_size=512, imgchan=3, activation='relu'):
+    def create_segmenter_as(segmenter='HarDMSEG', activation='relu', **kwargs):
         assert(segmenter in ['HarDMSEG', 'MedT'])
 
         if segmenter == 'HarDMSEG':
-            return SegmenterFactory.create_hardmseg_model(activation=activation)
-        elif segmenter == 'MedT':
-            return SegmenterFactory.create_medt_model(img_size=img_size, imgchan=imgchan)
+            return SegmenterFactory.create_hardmseg_model(activation=activation, **kwargs)
+        elif segmenter == 'DoubleNet':
+            return SegmenterFactory.create_double_net_model(**kwargs)
 
 
-    def create_hardmseg_model(activation='relu'):
-        return HarDMSEG(activation=activation, channel=64)
+    def create_hardmseg_model(model_variant='HarDNet68', activation='relu', channel=32):
+        return HarDMSEG(activation=activation, channel=channel)
 
     # def create_mobilewnet_model(activation='hard_swish'):
     #     return MobileWnet(activation=activation)
     
-    def create_medt_model(img_size=512, imgchan=3):
-        return MedT(img_size=img_size, imgchan=imgchan)
+    def create_double_net_model(img_size=512, imgchan=3, hardnet_channel=32, pretrained_hardmseg=None):
+        return DoubleNet(img_size=img_size, imgchan=imgchan, hardnet_channel=32, pretrained_hardmseg=pretrained_hardmseg)
