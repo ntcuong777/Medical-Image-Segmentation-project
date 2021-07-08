@@ -1,17 +1,14 @@
-from numpy.core.fromnumeric import mean
 import torch
 from torch.autograd import Variable
 import os
-import argparse
 from datetime import datetime
 from data_utils.dataloader import get_train_loader, get_test_loader
 from utils.utils import clip_gradient, adjust_lr, AvgMeter
 import torch.nn.functional as F
 import numpy as np
-from torchinfo import summary
 import torch.nn as nn
-from utils.losses import StructureLoss, FocalTverskyLoss, DiceFocalLoss, DiceBCELoss
-from module.segmenter import SegmenterFactory
+from lib.losses import BCEIoULoss
+from lib.HarDMSEG import HarDMSEG
 from config import TrainConfig, TestConfig
 
 def test(model):
@@ -50,7 +47,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
     model.train()
 
     # ---- the loss to use ----
-    loss_fn = DiceFocalLoss() #DiceBCELoss()
+    loss_fn = BCEIoULoss()
 
     # ---- multi-scale training ----
     size_rates = [0.75, 1, 1.25]
@@ -115,7 +112,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
 def train_hardmseg(config: TrainConfig):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = SegmenterFactory.create_segmenter_as(segmenter='HarDMSEG', hardnet_channel=64)
+    model = HarDMSEG()
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         model = nn.DataParallel(model)
@@ -126,9 +123,6 @@ def train_hardmseg(config: TrainConfig):
 
     train_loader = get_train_loader(config)
     total_step = len(train_loader)
-
-    # Summarize model
-    # summary(model, input_size=(8, 3, 512, 512))
 
     print("#"*20, "Start Training", "#"*20)
 
@@ -144,3 +138,8 @@ def train_hardmseg(config: TrainConfig):
     for epoch in range(1, config.epochs):
         adjust_lr(optimizer, config.learning_rate, epoch, config.decay_rate, config.decay_epoch)
         best_dice = train_loop(config, train_loader, model, optimizer, epoch, best_dice, total_step)
+
+
+if __name__ == "__main__":
+    config = TrainConfig.load_config_class('config/train_config/train_config.yaml')
+    train_hardmseg(config)

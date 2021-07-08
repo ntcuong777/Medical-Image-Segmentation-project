@@ -1,0 +1,9 @@
+# Note that the relative path here are relative to the folder where you run the trainer
+data: # Inside each path there are two folders: `images` and `masks` containing inputs and labels
+  test_path: '../data/test'
+train:
+  num_workers: 16
+  batch_size: 16
+  input_dim: 352
+  num_channels: 3
+

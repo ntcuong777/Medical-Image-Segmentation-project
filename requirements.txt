@@ -14,3 +14,6 @@ opencv-python
 albumentations>=1.0.1
 thop
 torchinfo
+easydict
+PyYAML==5.4.1
+tabulate
