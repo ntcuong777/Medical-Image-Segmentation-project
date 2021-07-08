@@ -110,7 +110,7 @@ class TestDataset:
         self.images = sorted(self.images)
         self.gts = sorted(self.gts)
 
-        self.data_transformer = TestAugmentation(config)
+        # self.data_transformer = TestAugmentation(config)
         self.size = len(self.images)
 
 
@@ -123,7 +123,9 @@ class TestDataset:
         gt = (gt / 255.0).astype(np.float32)
         gt = np.expand_dims(gt, axis=2)
 
-        image, gt = self.data_transformer(image, gt)
+        image = image.transpose((2, 0, 1))
+        gt = gt.transpose((2, 0, 1))
+        # image, gt = self.data_transformer(image, gt)
 
         # name = self.images[self.index].split('/')[-1]
         # if name.endswith('.jpg'):
