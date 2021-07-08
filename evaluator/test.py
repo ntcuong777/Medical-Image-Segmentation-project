@@ -2,9 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import os, argparse
-import imageio
 from module.segmenter.segmenter_factory import SegmenterFactory
-from config import TestConfig
 import torchvision.transforms as transforms
 from PIL import Image
 

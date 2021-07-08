@@ -1,4 +1,3 @@
-from config import TrainConfig
 import torch
 import torch.nn as nn
 from module.segmenter.hardmseg import HarDMSEG
