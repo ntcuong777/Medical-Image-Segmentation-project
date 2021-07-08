@@ -175,7 +175,7 @@ class HarDMSEG(nn.Module):
             just in case we are allowed to use the author's pretrained weights for
             the contest or something :)
         """
-        del self.hardnet.delete_classification_head()
+        self.hardnet.delete_classification_head()
         del self.ra4_conv1, self.ra4_conv2, self.ra4_conv3, self.ra4_conv4, self.ra4_conv5
         del self.ra3_conv1, self.ra3_conv2, self.ra3_conv3, self.ra3_conv4
         del self.ra2_conv1, self.ra2_conv2, self.ra2_conv3, self.ra2_conv4, self.conv2
