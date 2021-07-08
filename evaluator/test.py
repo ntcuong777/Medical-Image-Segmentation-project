@@ -7,12 +7,17 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 class test_dataset:
-    def __init__(self, image_root, gt_root):
+    def __init__(self, image_root, gt_root, testsize):
+        self.testsize = testsize
         self.images = [image_root + f for f in os.listdir(image_root) if f.endswith('.jpg') or f.endswith('.png')]
-        self.gts = [gt_root + f for f in os.listdir(gt_root) if f.endswith('.jpg') or f.endswith('.png')]
+        self.gts = [gt_root + f for f in os.listdir(gt_root) if f.endswith('.tif') or f.endswith('.png')]
         self.images = sorted(self.images)
         self.gts = sorted(self.gts)
-        self.transform = transforms.ToTensor()
+        self.transform = transforms.Compose([
+            transforms.Resize((self.testsize, self.testsize)),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406],
+                                 [0.229, 0.224, 0.225])])
         self.gt_transform = transforms.ToTensor()
         self.size = len(self.images)
         self.index = 0
