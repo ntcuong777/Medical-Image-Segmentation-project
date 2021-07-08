@@ -121,7 +121,7 @@ class TestDataset:
         gt = cv.cvtColor(gt, cv.COLOR_BGR2GRAY)
         image = (image / 255.0).astype(np.float32)
         gt = (gt / 255.0).astype(np.float32)
-        gt = np.expand_dims(gt, axis=2)
+        gt = np.expand_dims(gt, axixs=2)
 
         image, gt = self.data_transformer(image, gt)
 

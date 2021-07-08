@@ -16,7 +16,7 @@ class TrainAugmentation:
                                                      A.RandomBrightness(),
                                                      A.RandomContrast(),
                                                      A.RandomRotate90()], 2),
-                                           ToTensorV2()], p=1)
+                                           ToTensorV2(transpose_mask=True)], p=1)
         else:
             self.augmentation = A.Compose([A.Resize(height=config.input_dim[0], width=config.input_dim[1], p=1),
                                            ToTensorV2()], p=1)
