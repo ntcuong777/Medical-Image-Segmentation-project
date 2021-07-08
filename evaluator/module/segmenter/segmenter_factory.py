@@ -1,4 +1,3 @@
-from trainer.uaca_net_trainer.lib.UACANet import UACANet
 from .hardmseg.HarDMSEG import HarDMSEG
 from .double_net import DoubleNet
 from .uaca_net import UACANet
