@@ -86,7 +86,7 @@ def train_loop(config: TrainConfig, train_loader, model, optimizer, epoch, best_
 
             # ---- recording loss ----
             if rate == 1:
-                loss_record5.update(loss.data, config.batchsize)
+                loss_record5.update(loss.data, config.batch_size)
 
         # ---- training visualization ----
         if i % 20 == 0 or i == total_step:
