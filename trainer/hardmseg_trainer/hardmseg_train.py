@@ -22,22 +22,19 @@ def test(model):
     test_loader = get_test_loader(config)
     b = 0.0
     for i, (image, gt) in enumerate(test_loader, start=1):
-        gt = np.asarray(gt, np.float32)
         gt /= (gt.max() + 1e-8)
         image = image.cuda()
         
-        res  = model(image)
-        res = F.interpolate(res, size=gt.shape, mode='bilinear')
-        res = res.sigmoid().data.cpu().numpy().squeeze()
+        res  = model(image, use_sigmoid=True)
+        res = F.interpolate(res, size=gt.shape[2], mode='bilinear')
+        res = res.data.cpu().numpy()
         res = (res - res.min()) / (res.max() - res.min() + 1e-8)
         
         input = res
-        target = np.array(gt)
+        target = gt.data.numpy()
         smooth = 1
-        input_flat = np.reshape(input,(-1))
-        target_flat = np.reshape(target,(-1))
 
-        intersection = (input_flat*target_flat)
+        intersection = (input*target)
 
         loss =  (2 * intersection.sum() + smooth) / (input.sum() + target.sum() + smooth)
 
