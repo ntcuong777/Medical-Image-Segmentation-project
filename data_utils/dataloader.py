@@ -125,6 +125,8 @@ class TestDataset:
 
         image = image.transpose((2, 0, 1))
         gt = gt.transpose((2, 0, 1))
+
+        image = torch.tensor(image)
         # image, gt = self.data_transformer(image, gt)
 
         # name = self.images[self.index].split('/')[-1]
