@@ -42,8 +42,8 @@ class test_dataset:
 
 if __name__ == '__main__':
     for _data_name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
-        image_root = 'results/DoubleNet/{}/'.format(_data_name)
-        gt_root = 'data/test/{}/masks/'.format(_data_name)
+        image_root = './results/DoubleNet/{}/'.format(_data_name)
+        gt_root = '../data/test/{}/masks/'.format(_data_name)
     
         test_loader = test_dataset(image_root, gt_root)
         b=0.0
