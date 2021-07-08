@@ -14,7 +14,7 @@ class DoubleNet(nn.Module):
         This is actually a heuristic. This module will not be trained as HarDMSEG & UACANet will be trained
         separately.
     """
-    def __init__(self, pretrained_hardmseg=None):
+    def __init__(self, pretrained_hardmseg='snapshots/HarDMSEG/best.pth'):
         super(DoubleNet, self).__init__()
 
         assert pretrained_hardmseg is None, 'Must provide HarDMSEG weights to DoubleNet'
