@@ -1,1 +1,1 @@
-from .hardmseg_train import train
+from .hardmseg_train import train_hardmseg
