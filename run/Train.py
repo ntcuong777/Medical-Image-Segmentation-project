@@ -49,8 +49,8 @@ def train(opt):
         for i, sample in pbar:
             optimizer.zero_grad()
             images, gts = sample['image'], sample['gt']
-            images = images.cuda()
-            gts = gts.cuda()
+            images = images.to(device)
+            gts = gts.to(device)
             out = model(images, gts)
             out['loss'].backward()
             clip_gradient(optimizer, opt.Train.clip)

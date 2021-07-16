@@ -58,7 +58,7 @@ def test(opt):
 
             count_imgs += 1
             start_time = time.time()
-            image = image.cuda()
+            image = image.to(device)
             out = model(image)['pred']
             total_time += (time.time() - start_time)
 
