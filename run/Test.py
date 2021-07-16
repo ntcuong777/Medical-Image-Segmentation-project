@@ -26,9 +26,10 @@ def _args():
     return parser.parse_args()
 
 def test(opt):
+    device = 'cuda:' + str(opt.Model.cuda_device) if torch.cuda.is_available() else 'cpu'
     model = SegmenterFactory.create_segmenter_as(opt) # eval(opt.Model.name)(opt.Model)
     model.load_state_dict(torch.load(opt.Test.pth_path))
-    model.cuda()
+    model.to(device) # model.cuda()
     model.eval()
 
     fg_threshold = opt.Test.fg_threshold

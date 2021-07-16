@@ -3,6 +3,7 @@ Model:
     decoder_channel: 32
     pretrained_hardmseg: False # In case of training, set this to false
     pretrained_path: 'snapshots/HarDMSEG_DW39/latest.pth'
+    cuda_device: 0
     baseline_model:
       arch: 39
       depth_wise: True

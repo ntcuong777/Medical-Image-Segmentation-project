@@ -3,6 +3,7 @@ Model:
     channel: 256
     output_stride: 16
     pretrained: True
+    cuda_device: 0
 Train:
     epoch: 240
     lr: 0.0001

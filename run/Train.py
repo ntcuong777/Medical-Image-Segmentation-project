@@ -21,7 +21,8 @@ def _args():
     return parser.parse_args()
 
 def train(opt):
-    model = SegmenterFactory.create_segmenter_as(opt).cuda() # eval(opt.Model.name)(opt.Model).cuda()
+    device = 'cuda:' + str(opt.Model.cuda_device) if torch.cuda.is_available() else 'cpu'
+    model = SegmenterFactory.create_segmenter_as(opt).to(device) # eval(opt.Model.name)(opt.Model).cuda()
     
     image_root = os.path.join(opt.Train.train_path, 'images')
     gt_root = os.path.join(opt.Train.train_path, 'masks')
