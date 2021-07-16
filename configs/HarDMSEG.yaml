@@ -48,6 +48,7 @@ Test:
     num_workers: 16
     pin_memory: True
     rot_aug: False
+    fg_threshold: 0.5
     transforms:
         resize: 
             size: [352, 352]

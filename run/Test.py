@@ -31,6 +31,8 @@ def test(opt):
     model.cuda()
     model.eval()
 
+    fg_threshold = opt.Test.fg_threshold
+
     print('#' * 20, 'Test prep done, start testing', '#' * 20)
 
     for dataset in tqdm.tqdm(opt.Test.datasets, desc='Total TestSet', total=len(opt.Test.datasets), position=0, bar_format='{desc:<30}{percentage:3.0f}%|{bar:50}{r_bar}'):
@@ -62,7 +64,7 @@ def test(opt):
             out = F.interpolate(out, original_size, mode='bilinear', align_corners=True)
             out = out.data.sigmoid().cpu().numpy().squeeze()
             out = (out - out.min()) / (out.max() - out.min() + 1e-8)
-            Image.fromarray(((out > 0.5) * 255).astype(np.uint8)).save(os.path.join(save_path, name[0]))
+            Image.fromarray(((out > fg_threshold) * 255).astype(np.uint8)).save(os.path.join(save_path, name[0]))
         
         print('#' * 10, 'Average FPS = %.5f' % (1.0 / (total_time / count_imgs)), '#' * 10)
 

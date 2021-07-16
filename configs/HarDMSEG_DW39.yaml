@@ -1,22 +1,26 @@
 Model:
-    name: "CANet"
-    channel: 256
-    output_stride: 16
-    pretrained: True
+    name: "HarDMSEG"
+    decoder_channel: 32
+    pretrained_hardmseg: False # In case of training, set this to false
+    pretrained_path: 'snapshots/HarDMSEG_DW39/latest.pth'
+    baseline_model:
+      arch: 39
+      depth_wise: True
+      pretrained: True
 Train:
     epoch: 240
     lr: 0.0001
-    batchsize: 32
+    batchsize: 64
     clip: 0.5
     gamma: 0.9
     min_learning_rate: 0.0000001
     warmup_iteration: 300
     shuffle: True
-    num_workers: 8
+    num_workers: 32
     pin_memory: True
     checkpoint_epoch: 40
     train_path: "data/TrainDataset"
-    train_save: "snapshots/CANet-L"
+    train_save: "snapshots/HarDMSEG_DW39"
     transforms:
         resize: 
             size: [352, 352]
@@ -38,13 +42,13 @@ Train:
         totensor: NULL
 Test:
     gt_path: "data/TestDataset"
-    out_path: "results/CANet-L"
-    pth_path: "snapshots/CANet-L/latest.pth"
+    out_path: "results/HarDMSEG_DW39"
+    pth_path: "snapshots/HarDMSEG_DW39/latest.pth"
     datasets: ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']
-    num_workers: 8
+    num_workers: 32
     pin_memory: True
     rot_aug: False
-    fg_threshold: 0.5
+    fg_threshold: 0.3
     transforms:
         resize: 
             size: [352, 352]
@@ -55,6 +59,6 @@ Test:
         totensor: NULL
 Eval:
     gt_path: "data/TestDataset"
-    pred_path: "results/CANet-L"
+    pred_path: "results/HarDMSEG_DW39"
     result_path: "EvaluateResults"
     datasets: ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']
