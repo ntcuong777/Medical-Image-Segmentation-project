@@ -1,0 +1,9 @@
+torch
+torchvision
+tqdm
+easydict
+PyYAML==5.4.1
+opencv-python
+thop
+tabulate
+scipy
