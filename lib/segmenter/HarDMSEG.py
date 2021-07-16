@@ -22,7 +22,7 @@ class HarDMSEG(nn.Module):
 
         # ---- Receptive Field Block like module ----
         ch1, ch2, ch3 = 320, 720, 1280 # iff arch == 85 only
-        if arch == 68:
+        if arch == 68 or arch == 39:
             ch1, ch2, ch3 = 320, 640, 1024
 
         self.rfb2_1 = RFB_modified(ch1, channel)
