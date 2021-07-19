@@ -143,7 +143,7 @@ def eval(opt):
         csv.write(out_str)
         csv.close()
 
-    print(tabulate(results, headers=['dataset', *headers], floatfmt=".3f"), file=result_file)
+    print(tabulate(results, headers=['dataset', *headers], floatfmt=".3f"))
     # Write table to file
     result_file = open(method + '_res_table.txt', 'w')
     print(tabulate(results, headers=['dataset', *headers], floatfmt=".3f"), file=result_file)
