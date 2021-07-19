@@ -142,7 +142,13 @@ def eval(opt):
 
         csv.write(out_str)
         csv.close()
-    print(tabulate(results, headers=['dataset', *headers], floatfmt=".3f"))
+
+    print(tabulate(results, headers=['dataset', *headers], floatfmt=".3f"), file=result_file)
+    # Write table to file
+    result_file = open(method + '_res_table.txt', 'w')
+    print(tabulate(results, headers=['dataset', *headers], floatfmt=".3f"), file=result_file)
+    result_file.close()
+
     print("#"*20, "End Evaluation", "#"*20)
 
 if __name__ == "__main__":

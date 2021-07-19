@@ -34,6 +34,8 @@ def speedtest(opt):
     model.to(device) # model.cuda()
     model.eval()
 
+    method = os.path.split(opt.Test.out_path)[-1]
+
     # Init runtime on GPU
     init_tensor = torch.tensor(np.ones(shape=(32, 3, 352, 352)).astype(np.float32)).to(device)
     count_init = 5
@@ -78,8 +80,12 @@ def speedtest(opt):
             count_imgs += out.shape[0]
 
         average_fps += (1.0 / (total_time / count_imgs))
-    
-    print('AVERAGE FPS = %.5f' % (average_fps / 20.0))
+
+    print('Average FPS of %s = %.5f' % (method, average_fps / 20.0))
+    # Write speed result to file
+    result_file = open(method + '_speed.txt', 'w')
+    print('Average FPS of %s = %.5f' % (method, average_fps / 20.0), file=result_file)
+    result_file.close()
 
     print('#' * 20, 'Speedtest done', '#' * 20)
 
