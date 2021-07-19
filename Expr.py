@@ -17,4 +17,5 @@ if __name__ == "__main__":
 
     train(opt)
     test(opt)
+    speedtest(opt)
     eval(opt)
