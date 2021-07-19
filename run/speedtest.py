@@ -33,7 +33,7 @@ def speedtest(opt):
     model.eval()
 
     # Init runtime on GPU
-    init_tensor = torch.tensor(np.ones(shape=(32, 3, 352, 352)))
+    init_tensor = torch.tensor(np.ones(shape=(32, 3, 352, 352))).to(device)
     count_init = 5
     while count_init > 0:
         model(init_tensor)
