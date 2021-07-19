@@ -1,4 +1,6 @@
 from typing import Counter
+
+from numpy.lib.function_base import average
 import torch
 import yaml
 import os
@@ -42,34 +44,42 @@ def speedtest(opt):
 
     print('#' * 20, 'Init done, starting speedtest', '#' * 20)
 
-    dataset = 'Kvasir'
-    data_path = os.path.join(opt.Test.gt_path, dataset)
-    save_path = os.path.join(opt.Test.out_path, dataset)
+    average_fps = 0.0
+    count_samples = 20
 
-    os.makedirs(save_path, exist_ok=True)
-    image_root = os.path.join(data_path, 'images')
-    gt_root = os.path.join(data_path, 'masks')
-    test_dataset = PolypDataset(image_root, gt_root, opt.Test)
-    test_loader = data.DataLoader(dataset=test_dataset,
-                                    batch_size=opt.Test.batch_size,
-                                    num_workers=opt.Test.num_workers,
-                                    pin_memory=opt.Test.pin_memory)
+    while count_samples > 0:
+        count_samples -= 1
 
-    total_time = 0.0
-    count_imgs = 0
-    for i, sample in enumerate(test_loader):
-        image = sample['image']
+        dataset = 'Kvasir'
+        data_path = os.path.join(opt.Test.gt_path, dataset)
+        save_path = os.path.join(opt.Test.out_path, dataset)
 
-        image = image.to(device)
-        # Only test inference speed of the model
-        start_time = time.time()
-        out = model(image)['pred']
-        out = out.data.sigmoid().cpu().numpy() # Convert to numpy for fairness
-        total_time += (time.time() - start_time)
+        os.makedirs(save_path, exist_ok=True)
+        image_root = os.path.join(data_path, 'images')
+        gt_root = os.path.join(data_path, 'masks')
+        test_dataset = PolypDataset(image_root, gt_root, opt.Test)
+        test_loader = data.DataLoader(dataset=test_dataset,
+                                        batch_size=opt.Test.batch_size,
+                                        num_workers=opt.Test.num_workers,
+                                        pin_memory=opt.Test.pin_memory)
 
-        count_imgs += out.shape[0]
+        total_time = 0.0
+        count_imgs = 0
+        for i, sample in enumerate(test_loader):
+            image = sample['image']
 
-    print('#' * 10, 'Average FPS = %.5f' % (1.0 / (total_time / count_imgs)), '#' * 10)
+            image = image.to(device)
+            # Only test inference speed of the model
+            start_time = time.time()
+            out = model(image)['pred']
+            out = out.data.sigmoid().cpu().numpy() # Convert to numpy for fairness
+            total_time += (time.time() - start_time)
+
+            count_imgs += out.shape[0]
+
+        average_fps += (1.0 / (total_time / count_imgs))
+    
+    print('AVERAGE FPS = %.5f' % (average_fps / 20.0))
 
     print('#' * 20, 'Speedtest done', '#' * 20)
 
