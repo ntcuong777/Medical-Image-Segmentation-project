@@ -130,7 +130,7 @@ class HarDNet(nn.Module):
         self.base.append ( ConvLayer(first_ch[0], first_ch[1],  kernel=second_kernel) )
         count_layers += 1 # one layer added
         self.encoder_block_end_indices.append(count_layers - 1)
-        
+
         # Maxpooling or DWConv3x3 downsampling
         if max_pool:
             self.base.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))

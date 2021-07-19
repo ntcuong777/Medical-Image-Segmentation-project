@@ -42,7 +42,8 @@ Test:
     out_path: "results/UACANet-S"
     pth_path: "snapshots/UACANet-S/latest.pth"
     datasets: ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']
-    num_workers: 8
+    batch_size: 64
+    num_workers: 32
     pin_memory: True
     rot_aug: False
     fg_threshold: 0.5
