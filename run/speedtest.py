@@ -64,7 +64,7 @@ def speedtest(opt):
         # Only test inference speed of the model
         start_time = time.time()
         out = model(image)['pred']
-        out = out.data.sigmoid()
+        out = out.data.sigmoid().cpu().numpy() # Convert to numpy for fairness
         total_time += (time.time() - start_time)
 
         count_imgs += out.shape[0]
