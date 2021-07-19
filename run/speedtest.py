@@ -59,15 +59,14 @@ def speedtest(opt):
     count_imgs = 0
     for i, sample in enumerate(test_loader):
         image = sample['image']
-        original_size = sample['original_size']
 
-        start_time = time.time()
         image = image.to(device)
+        # Only test inference speed of the model
+        start_time = time.time()
         out = model(image)['pred']
-        # Speedtesting on one file size only, no need to interpolate
-        # out = F.interpolate(out, original_size, mode='bilinear', align_corners=True)
-        out = out.data.sigmoid().cpu().numpy()
+        out = out.data.sigmoid()
         total_time += (time.time() - start_time)
+
         count_imgs += out.shape[0]
 
     print('#' * 10, 'Average FPS = %.5f' % (1.0 / (total_time / count_imgs)), '#' * 10)
