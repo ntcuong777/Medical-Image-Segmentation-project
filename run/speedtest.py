@@ -64,7 +64,8 @@ def speedtest(opt):
         start_time = time.time()
         image = image.to(device)
         out = model(image)['pred']
-        out = F.interpolate(out, original_size, mode='bilinear', align_corners=True)
+        # Speedtesting on one file size only, no need to interpolate
+        # out = F.interpolate(out, original_size, mode='bilinear', align_corners=True)
         out = out.data.sigmoid().cpu().numpy()
         total_time += (time.time() - start_time)
         count_imgs += out.shape[0]
