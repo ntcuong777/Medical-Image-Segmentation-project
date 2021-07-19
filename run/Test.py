@@ -45,7 +45,7 @@ def test(opt):
         gt_root = os.path.join(data_path, 'masks')
         test_dataset = PolypDataset(image_root, gt_root, opt.Test)
         test_loader = data.DataLoader(dataset=test_dataset,
-                                      batch_size=opt.Test.batch_size,
+                                      batch_size=1,
                                       num_workers=opt.Test.num_workers,
                                       pin_memory=opt.Test.pin_memory)
 
@@ -56,17 +56,16 @@ def test(opt):
             name = sample['name']
             original_size = sample['original_size']
 
-            count_imgs += opt.Test.batch_size
+            count_imgs += 1
             start_time = time.time()
             image = image.to(device)
             out = model(image)['pred']
-            out = F.interpolate(out, original_size, mode='bilinear', align_corners=True)
-            out = out.data.sigmoid().cpu().numpy()
             total_time += (time.time() - start_time)
 
-            for j in range(opt.Test.batch_size):
-                out[j] = (out[j] - out[j].min()) / (out[j].max() - out[j].min() + 1e-8)
-                Image.fromarray(((out[j] > fg_threshold) * 255).astype(np.uint8)).save(os.path.join(save_path, name[j]))
+            out = F.interpolate(out, original_size, mode='bilinear', align_corners=True)
+            out = out.data.sigmoid().cpu().numpy().squeeze()
+            out = (out - out.min()) / (out.max() - out.min() + 1e-8)
+            Image.fromarray(((out > fg_threshold) * 255).astype(np.uint8)).save(os.path.join(save_path, name[0]))
         
         print('#' * 10, 'Average FPS = %.5f' % (1.0 / (total_time / count_imgs)), '#' * 10)
 
