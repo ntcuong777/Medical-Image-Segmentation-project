@@ -38,6 +38,7 @@ def speedtest(opt):
     while count_init > 0:
         model(init_tensor)
         init_tensor += 1
+        count_init -= 1
 
     print('#' * 20, 'Init done, starting speedtest', '#' * 20)
 
