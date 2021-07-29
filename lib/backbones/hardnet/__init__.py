@@ -12,3 +12,6 @@ def get_hardnet_baseline(options):
         return model
     else:
         model = HarDNet_CBAM(arch=options.arch, depth_wise=options.depth_wise, pretrained_hardnet=options.pretrained)
+
+        model.delete_classification_head() # delete classification head to reduce memory usage
+        return model
