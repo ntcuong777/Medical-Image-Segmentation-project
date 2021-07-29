@@ -20,7 +20,7 @@ class HarDNet_CBAM(HarDNet): # Adapter design pattern is great
     def forward(self, x):
         out_branch = []
         cbam_idx = 0
-        for i in range(len(self.base) - 1):
+        for i in range(len(self.base)):
             x = self.base[i](x)
 
             if i in self.har_d_block_indices:
@@ -29,5 +29,5 @@ class HarDNet_CBAM(HarDNet): # Adapter design pattern is great
             
             if i in self.encoder_block_end_indices[-3:]:
                 out_branch.append(x)
-        
+
         return out_branch
