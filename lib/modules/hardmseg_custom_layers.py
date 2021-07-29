@@ -1,4 +1,3 @@
-from lib.backbones.HarDNet import get_hardnet_baseline
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
