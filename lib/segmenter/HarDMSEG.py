@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from lib.backbones.HarDNet import get_hardnet_baseline
+from lib.backbones.hardnet import get_hardnet_baseline
 from lib.modules.hardmseg_custom_layers import aggregation, RFB_modified
 from lib.losses.losses import bce_iou_loss
 

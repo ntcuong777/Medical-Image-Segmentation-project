@@ -117,7 +117,9 @@ class HarDNet(nn.Module):
         
         blks = len(n_layers)
         self.base = nn.ModuleList([])
-        self.encoder_block_end_indices = []
+        self.har_d_block_indices = []
+        self.encoder_block_end_indices = [] # save the indices of the layer which has the last output
+                                            # of each encoder block before the downsampling layer next to it
 
         count_layers = 0
         # First Layer: Standard Conv3x3, Stride=2
@@ -145,6 +147,7 @@ class HarDNet(nn.Module):
             ch = blk.get_out_ch()
             self.base.append ( blk )
             count_layers += 1 # one layer added - one HarDBlock
+            self.har_d_block_indices.append(count_layers - 1)
             
             if i == blks-1 and arch == 85:
                 self.base.append ( nn.Dropout(0.1))
@@ -209,7 +212,7 @@ class HarDNet(nn.Module):
         WORKDIR = os.getcwd()
 
         # Changing the workdir is necessary to load the saved HarDNet weights
-        TEMPDIR = os.path.join(os.getcwd(), 'lib/backbones')
+        TEMPDIR = os.path.join(os.getcwd(), 'lib/backbones/hardnet')
         os.chdir(TEMPDIR)
 
         weights = torch.load(hardnet_weight_paths[model_name])
@@ -225,14 +228,3 @@ class HarDNet(nn.Module):
         if self.classification_head_available: # Delete iff not yet delete
             self.base = nn.ModuleList([self.base[i] for i in range(len(self.base) - 1)])
             self.classification_head_available = False # Deleted, future calls will not execute this deletion
-
-
-
-def get_hardnet_baseline(opt):
-    model = HarDNet(arch=opt.arch, depth_wise=opt.depth_wise)
-    if opt.pretrained:
-        model_name = 'HarDNet' + str(opt.arch) + ('ds' if opt.depth_wise else '')
-        model.load_pretrained(model_name=model_name)
-
-    model.delete_classification_head() # delete classification head to reduce memory usage
-    return model

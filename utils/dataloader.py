@@ -7,7 +7,7 @@ import torchvision.transforms as transforms
 
 from PIL import Image
 
-from utils.custom_transforms import *
+from utils.custom_data_transforms import *
 
 class PolypDataset(data.Dataset):
     """
