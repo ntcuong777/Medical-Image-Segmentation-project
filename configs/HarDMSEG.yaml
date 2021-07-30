@@ -18,7 +18,7 @@ Train:
     min_learning_rate: 0.0000001
     warmup_iteration: 300
     shuffle: True
-    num_workers: 8
+    num_workers: 32
     pin_memory: True
     checkpoint_epoch: 40
     train_path: "data/TrainDataset"
