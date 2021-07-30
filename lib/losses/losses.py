@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 
-def focal_loss(pred_tensor, gt_tensor, gamma, apply_sigmoid=True, reduction='mean', epsilon = 1e-8):
+def focal_loss(pred_tensor, gt_tensor, apply_sigmoid=True, reduction='mean', gamma=0, epsilon = 1e-8):
     def logit_sanitation(val, min_val):
         """
             Mini function used by focal_loss()
