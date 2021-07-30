@@ -7,6 +7,7 @@ Model:
     cuda_device: 0
     baseline_model:
       arch: 68
+      use_cbam: False
       depth_wise: False
       pretrained: True
 Train:
