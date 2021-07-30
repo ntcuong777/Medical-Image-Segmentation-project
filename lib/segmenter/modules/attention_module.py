@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-from lib.modules.layers import *
+from .layers import *
 from utils.utils import *
 
 class reverse_attention(nn.Module):
