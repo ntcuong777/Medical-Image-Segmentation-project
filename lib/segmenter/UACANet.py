@@ -3,11 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-from lib.losses import *
-from lib.modules.layers import *
-from lib.modules.context_module import *
-from lib.modules.attention_module import *
-from lib.modules.decoder_module import *
+from lib.losses import get_loss_fn
+from lib.segmenter.modules.layers import *
+from lib.segmenter.modules.context_module import *
+from lib.segmenter.modules.attention_module import *
+from lib.segmenter.modules.decoder_module import *
 
 from lib.backbones.Res2Net_v1b import res2net50_v1b_26w_4s
 
@@ -27,7 +27,7 @@ class UACANet(nn.Module):
         self.attention3 = UACA(opt.channel * 2, opt.channel)
         self.attention4 = UACA(opt.channel * 2, opt.channel)
 
-        self.loss_fn = bce_iou_loss
+        self.loss_fn = get_loss_fn(opt.loss_fn)
 
         self.ret = lambda x, target: F.interpolate(x, size=target.shape[-2:], mode='bilinear', align_corners=False)
         self.res = lambda x, size: F.interpolate(x, size=size, mode='bilinear', align_corners=False)

@@ -1,6 +1,7 @@
 Model:
     name: "HarDMSEG"
     decoder_channel: 32
+    loss_fn: "bce_iou_loss"
     pretrained_hardmseg: False # In case of training, set this to false
     pretrained_path: 'snapshots/HarDMSEG_DW39/latest.pth'
     cuda_device: 0

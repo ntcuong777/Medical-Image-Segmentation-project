@@ -1,6 +1,6 @@
 import torch.nn as nn
 from lib.backbones.hardnet.HarDNet import HarDNet
-from lib.modules.cbam_module import CBAM
+from lib.backbones.hardnet.modules.cbam_module import CBAM
 
 class HarDNet_CBAM(HarDNet): # Adapter design pattern is great
     def __init__(self, arch=85, depth_wise=False, pretrained_hardnet=True):

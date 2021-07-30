@@ -2,6 +2,7 @@ Model:
     name: "UACANet"
     channel: 32
     output_stride: 32
+    loss_fn: "bce_iou_loss"
     pretrained: True
     cuda_device: 0
 Train:

@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from lib.backbones.hardnet import get_hardnet_baseline
-from lib.modules.hardmseg_custom_layers import aggregation, RFB_modified
-from lib.losses.losses import bce_iou_loss
+from lib.segmenter.modules.hardmseg_custom_layers import aggregation, RFB_modified
+from lib.losses import get_loss_fn
 
 class HarDMSEG(nn.Module):
     def __init__(self, opt):
@@ -40,7 +40,7 @@ class HarDMSEG(nn.Module):
         if opt.pretrained_hardmseg:
             self.load_state_dict(torch.load(opt.pretrained_path))
 
-        self.loss_fn = bce_iou_loss
+        self.loss_fn = get_loss_fn(opt.loss_fn)
 
 
     def forward(self, x, targets=None):

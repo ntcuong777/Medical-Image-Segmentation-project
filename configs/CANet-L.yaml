@@ -2,6 +2,7 @@ Model:
     name: "CANet"
     channel: 256
     output_stride: 16
+    loss_fn: "bce_iou_loss"
     pretrained: True
     cuda_device: 0
 Train:

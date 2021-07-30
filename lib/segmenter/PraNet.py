@@ -1,11 +1,11 @@
 import torch.nn as nn
 import torch.nn.functional as F
 
-from lib.losses import *
-from lib.modules.layers import *
-from lib.modules.context_module import *
-from lib.modules.attention_module import *
-from lib.modules.decoder_module import *
+from lib.losses import get_loss_fn
+from lib.segmenter.modules.layers import *
+from lib.segmenter.modules.context_module import *
+from lib.segmenter.modules.attention_module import *
+from lib.segmenter.modules.decoder_module import *
 
 from lib.backbones.Res2Net_v1b import res2net50_v1b_26w_4s
 
@@ -25,7 +25,8 @@ class PraNet(nn.Module):
         self.attention3 = reverse_attention(1024, 64, 2, 3)
         self.attention4 = reverse_attention(2048, 256, 3, 5)
 
-        self.loss_fn = bce_iou_loss
+        self.loss_fn = get_loss_fn(opt.loss_fn)
+
 
     def forward(self, x, y=None):
         base_size = x.shape[-2:]

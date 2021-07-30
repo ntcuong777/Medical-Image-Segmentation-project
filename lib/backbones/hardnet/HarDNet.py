@@ -1,7 +1,7 @@
 import os
 import torch
 import torch.nn as nn
-from lib.modules.hardnet_custom_layers import Flatten, ConvLayer, CombConvLayer, DWConvLayer
+from lib.backbones.hardnet.modules.hardnet_custom_layers import Flatten, ConvLayer, CombConvLayer, DWConvLayer
 
 hardnet_weight_paths = {
     "HarDNet39ds": "weights/hardnet39ds.pth",
