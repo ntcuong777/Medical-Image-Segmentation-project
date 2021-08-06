@@ -1,1 +1,0 @@
-*NOTE*: All of the code in this folder is taken from the repo of 'HarDNet-MSEG'. The only file that is not taken from 'HarDNet-MSEG' is the `losses.py`. I copied that file in 'DCUnet' pytorch implementation repository.
