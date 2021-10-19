@@ -3,7 +3,7 @@
 ## Summary
 This is the source code of a medical segmentation project that I've worked on during my summer internship. The segmentation method in this repository is not really interesting so it will not be publishable (at least, I think so). I think that was also my fault for not really putting effort into this problem. Nevertheless, I've managed do get some results by running some experiments (which is described in this [report](./Medical-Img-Segmentation-notes.pdf)).
 
-I'm gonna release this code so that anyone who are interested in using this project will be able to adopt it and improve it. I'm hoping for nothing more than to contribute to future innovations in the AI landscape, even though such contributions might not be much of a deal (or I might not be able to contribute anything with this project :) ).
+I'm gonna release this code so that anyone who are interested in using this project will be able to adopt it and improve it. I'm hoping for nothing more than to contribute to future innovations in the AI landscape, even though such contributions might not be much of a deal (or I might not be able to contribute anything with this project 🙂).
 
 ## For anyone who don't want to read the report
 Yeah, I know. Reading the report is so much work (especially when my writing is horrible - working on improving it now). Long story short, I inserted the [CBAM](https://arxiv.org/abs/1807.06521) module into the middle of the two depthwise architectures of [HarDNet](https://arxiv.org/abs/1909.00948). The result is, again, not much interesting.
