@@ -11,6 +11,8 @@ Yeah, I know. Reading the report is so much work (especially when my writing is 
 You can look at the following figure to see where is that CBAM module is inserted.
 ![illustration](./Where-I-inserted-CBAM.png)
 
+You can find the experimental results in the [report](./Medical-Img-Segmentation-notes.pdf). I'm really lazy to render the results here.
+
 ## 1. Create environment
   + Create conda environment with following command `conda create -n <anything_u_want_here> python=3.7`
   + Activate environment with following command `conda activate <anything_u_want_here>`
