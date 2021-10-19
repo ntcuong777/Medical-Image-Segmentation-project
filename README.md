@@ -5,6 +5,12 @@ This is the source code of a medical segmentation project that I've worked on du
 
 I'm gonna release this code so that anyone who are interested in using this project will be able to adopt it and improve it. I'm hoping for nothing more than to contribute to future innovations in the AI landscape, even though such contributions might not be much of a deal (or I might not be able to contribute much :) ).
 
+## For anyone who don't want to read the report
+Yeah, I know. Reading the report is so much work (especially when my writing is horrible - working on improving it now). Long story short, I inserted the [CBAM](https://arxiv.org/abs/1807.06521) module into the middle of the two depthwise architectures of [HarDNet](https://arxiv.org/abs/1909.00948). The result is, again, not much interesting.
+
+You can look at the following figure to see where is that CBAM module is inserted.
+![illustration](./Where-I-inserted-CBAM.png)
+
 ## 1. Create environment
   + Create conda environment with following command `conda create -n <anything_u_want_here> python=3.7`
   + Activate environment with following command `conda activate <anything_u_want_here>`
